@@ -44,7 +44,7 @@ class Inventario(Base):
     id_inventario = Column(Integer, primary_key=True, index=True, autoincrement=True)
     id_producto = Column(Integer, ForeignKey('productos.id_producto'))
     cantidad = Column(Integer, nullable=False)
-    fecha_actualizacion = Column(TIMESTAMP, default=func.now())  # Corregido
+    fecha_actualizacion = Column(TIMESTAMP, default=func.now())  
     producto = relationship("Producto")
 
 class Venta(Base):
@@ -52,7 +52,7 @@ class Venta(Base):
     id_venta = Column(Integer, primary_key=True, index=True, autoincrement=True)
     id_producto = Column(Integer, ForeignKey('productos.id_producto'))
     cantidad = Column(Integer, nullable=False)
-    fecha_venta = Column(TIMESTAMP, default=func.now())  # Corregido
+    fecha_venta = Column(TIMESTAMP, default=func.now()) 
     total = Column(Float(precision=2), nullable=False)
     producto = relationship("Producto")
 
