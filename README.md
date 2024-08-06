@@ -38,3 +38,5 @@ Crear un nuevo archivo .env
 Nota: Poner las sigueinte lineas de codigo
 DB_NAME, DB_HOST, DB_PASSWORD, DB_DIAlECT, DB_USER
 
+
+9. Abrir una nueva terminal donde solo se utilice el frondEnd y poner el siguiente comando "npm install" y para ejecutar "npm run dev"
