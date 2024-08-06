@@ -31,5 +31,10 @@ Ejecutar el comando (sin comillas)
 “deactivate”
 ![image](https://github.com/user-attachments/assets/61daec8d-49c9-4260-8a2e-340c3d736948)
 
+8. Crear la conexión a la base de datos
+Crear un nuevo archivo .env
+![image](https://github.com/user-attachments/assets/535960ac-ad21-4a6b-8e58-c92cd8b9a7b4)
 
+Nota: Poner las sigueinte lineas de codigo
+DB_NAME, DB_HOST, DB_PASSWORD, DB_DIAlECT, DB_USER
 
