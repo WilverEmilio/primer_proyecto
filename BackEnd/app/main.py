@@ -1,6 +1,7 @@
 from starlette.responses import RedirectResponse
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 from . import crud
 from .conexion import SessionLocal, engine
@@ -10,6 +11,20 @@ from .models import Base
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",  # El origen de tu aplicación React
+    "http://localhost",       # Puedes agregar más orígenes si es necesario
+    "http://127.0.0.1"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Permitir orígenes especificados
+    allow_credentials=True,
+    allow_methods=["*"],    # Permitir todos los métodos HTTP (GET, POST, etc.)
+    allow_headers=["*"],    # Permitir todos los encabezados
+)
 
 def get_db():
     db = SessionLocal()
@@ -39,7 +54,15 @@ def get_user(id, db: Session = Depends(get_db)):
 
 @app.post('/api/usuarios/', response_model=Buscar_Usuario)
 def create_user(user: Datos_Usuarios, db: Session = Depends(get_db)):
+    # Verificar si el nombre ya está en uso
     check_name = crud.get_usur_by_name(db=db, nombre=user.nombre)
     if check_name:
         raise HTTPException(status_code=400, detail=f'El usuario {user.nombre} ya se encuentra en la base de datos')
+
+    # Verificar si el correo ya está en uso
+    check_email = crud.get_user_by_email(db=db, email=user.correo)
+    if check_email:
+        raise HTTPException(status_code=400, detail=f'El correo {user.correo} ya se encuentra en uso')
+    
+    # Crear el nuevo usuario
     return crud.create_usuario(db=db, usuario=user)
