@@ -1,12 +1,20 @@
+from typing import Annotated
+
 from starlette.responses import RedirectResponse
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import crud
 from .conexion import SessionLocal, engine
-from .schemas import Datos_Usuarios, Buscar_Usuario
+from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse
 from .models import Base
+
+from jose import JWTError, jwt
+from datetime import datetime, timedelta
+
+SECRET_KEY = "663020057e3698f9f5152633db69f3e5284ca38ef799372ab0a73dea90ce160f"
+TOKEN_SECONDS_EXPIRE = 3600
 
 Base.metadata.create_all(bind=engine)
 
@@ -32,6 +40,12 @@ def get_db():
         yield db
     finally:
         db.close()
+        
+def create_token(data: list): 
+    data_token = data.copy()
+    data_token["exp"] = datetime.utcnow() + timedelta(seconds=TOKEN_SECONDS_EXPIRE)
+    token_jwt = jwt.encode(data_token, key = SECRET_KEY, algorithm="HS256")
+    return token_jwt
         
 @app.get('/')
 def inicio():
@@ -66,3 +80,17 @@ def create_user(user: Datos_Usuarios, db: Session = Depends(get_db)):
     
     # Crear el nuevo usuario
     return crud.create_usuario(db=db, usuario=user)
+
+
+@app.post('/api/login/', response_model=LoginResponse)
+def login(user: Login, db: Session = Depends(get_db)):
+    user_login = crud.login(db=db, nombre=user.nombre, contrasena=user.contrasena)
+    if user_login:
+        # Crear el token
+        token = create_token(data={"sub": user_login.nombre})
+        
+        # Imprimir el token en la consola
+        print(f'Token generado para {user_login.nombre}: {token}')
+        
+        return LoginResponse(nombre=user_login.nombre, token=token)
+    raise HTTPException(status_code=404, detail='Usuario o contraseña incorrectos')

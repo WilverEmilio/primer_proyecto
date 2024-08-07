@@ -19,3 +19,7 @@ def create_usuario(db: Session, usuario: Datos_Usuarios):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+def login(db: Session, nombre: str, contrasena: str):
+    return db.query(Usuario).filter(Usuario.nombre == nombre, Usuario.contrasena == contrasena).first()
+    

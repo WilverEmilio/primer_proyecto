@@ -16,3 +16,18 @@ class Buscar_Usuario(Datos_Usuarios):
 
     class Config: 
         from_attributes = True
+        
+#login
+class Login(BaseModel): 
+    nombre: str
+    contrasena: str
+
+    class Config: 
+        from_attributes = True
+        
+class LoginResponse(BaseModel): 
+    nombre: str
+    token: str
+
+    class Config: 
+        orm_mode = True

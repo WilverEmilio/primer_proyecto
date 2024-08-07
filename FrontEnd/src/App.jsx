@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import UserBox from './components/userBox'
 import CreateUser from './components/createUser'
+import Login from './components/login'
 
 function App() {
   const [users, setUsers] = useState([])
@@ -13,6 +14,10 @@ function App() {
   return (  
     <>
       <h1>Frontend and Backend API</h1>
+
+      {
+        <Login />
+      }
 
       {
         <CreateUser />
