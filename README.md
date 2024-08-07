@@ -25,13 +25,13 @@ Poner el siguiente comando en la terminal donde activamos el entorno virtual (Si
 
 6.	Ya se puede trabajar en el proyecto
 Ejecutar el comando (sin comillas)
-“uvicorn app.main:app –reload”
+"uvicorn app.main:app --reload”
 
-7.	Si ya no se va a trabajar se debe de poner el siguiente comando en la terminal para desactivar el entorno virtual (Sin comillas)
+8.	Si ya no se va a trabajar se debe de poner el siguiente comando en la terminal para desactivar el entorno virtual (Sin comillas)
 “deactivate”
 ![image](https://github.com/user-attachments/assets/61daec8d-49c9-4260-8a2e-340c3d736948)
 
-8. Crear la conexión a la base de datos
+9. Crear la conexión a la base de datos
 Crear un nuevo archivo .env
 ![image](https://github.com/user-attachments/assets/535960ac-ad21-4a6b-8e58-c92cd8b9a7b4)
 
