@@ -6,6 +6,10 @@ import CreateUser from './components/createUser';
 import Login from './components/login';
 import Products from './components/Products'; 
 import Dashboard from './components/dashboard';
+import Perecederos from './components/productosPerecederos'
+import Noperecederos from './components/productosNoPerecederos'
+
+
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -19,13 +23,13 @@ function App() {
   return (
     <Router>
       <div>
-        {/* <h1>Abarrotería "La Bendición"</h1> */}
-
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/createUser" element={<CreateUser />} />
           <Route path="/Products" element={<Products />} />
           <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/perecederos" element={<Perecederos />} />
+          <Route path="/noperecederos" element={<Noperecederos />} />
         </Routes>
 
         {/* Componente de lista de usuarios (opcional) */}

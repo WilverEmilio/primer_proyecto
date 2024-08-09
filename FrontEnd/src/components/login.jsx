@@ -46,18 +46,15 @@ export default function Login() {
     return (
         <div>
             <h1>Abarrotería "La Bendición"</h1>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleLogin} className="form-container">
                 <input type="text" value={textname} onChange={handleTextName} placeholder="Username" required />
                 <input type="password" value={textpassword} onChange={handleTextPassword} placeholder="Password" required />
                 {error && <p>{error}</p>}
                 <button type="submit">Login</button>
                 <p style={{ marginTop: '20px' }}>
-                ¿No tienes cuenta? <Link to="/createUser">Crear usuario</Link>
+                    ¿No tienes cuenta? <Link to="/createUser">Crear usuario</Link>
                 </p>
-                <p>
-                <Link to="/products">Agregar Producto</Link>
-                </p>
-                </form>
+            </form>
         </div>
     );
 }
