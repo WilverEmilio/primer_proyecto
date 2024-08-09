@@ -9,10 +9,12 @@ from . import crud
 from .conexion import SessionLocal, engine
 from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse
 from .models import Base
+from passlib.context import CryptContext
 
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 SECRET_KEY = "663020057e3698f9f5152633db69f3e5284ca38ef799372ab0a73dea90ce160f"
 TOKEN_SECONDS_EXPIRE = 3600
 
@@ -46,6 +48,20 @@ def create_token(data: list):
     data_token["exp"] = datetime.utcnow() + timedelta(seconds=TOKEN_SECONDS_EXPIRE)
     token_jwt = jwt.encode(data_token, key = SECRET_KEY, algorithm="HS256")
     return token_jwt
+
+# Función para hacer hash de la contraseña
+def hash_contrasena(password: str) -> str:
+    return pwd_context.hash(password)
+
+# Función para verificar la contraseña contra su hash
+def verificar_contrasena(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+def validate_user(username: str, password: str, db: Session = Depends(get_db)):
+    user = crud.get_usur_by_name(db=db, nombre=username)
+    if user and verificar_contrasena(password, user.contrasena):
+        return True
+    return False
         
 @app.get('/')
 def inicio():
@@ -73,24 +89,24 @@ def create_user(user: Datos_Usuarios, db: Session = Depends(get_db)):
     if check_name:
         raise HTTPException(status_code=400, detail=f'El usuario {user.nombre} ya se encuentra en la base de datos')
 
-    # Verificar si el correo ya está en uso
-    check_email = crud.get_user_by_email(db=db, email=user.correo)
-    if check_email:
-        raise HTTPException(status_code=400, detail=f'El correo {user.correo} ya se encuentra en uso')
-    
+    # Hash de la contraseña
+    user.contrasena = hash_contrasena(user.contrasena)
+
     # Crear el nuevo usuario
     return crud.create_usuario(db=db, usuario=user)
 
 
 @app.post('/api/login/', response_model=LoginResponse)
 def login(user: Login, db: Session = Depends(get_db)):
-    user_login = crud.login(db=db, nombre=user.nombre, contrasena=user.contrasena)
-    if user_login:
-        # Crear el token
-        token = create_token(data={"sub": user_login.nombre})
-        
-        # Imprimir el token en la consola
-        print(f'Token generado para {user_login.nombre}: {token}')
-        
-        return LoginResponse(nombre=user_login.nombre, token=token)
-    raise HTTPException(status_code=404, detail='Usuario o contraseña incorrectos')
+    if user.nombre and user.contrasena:
+        if validate_user(user.nombre, user.contrasena, db):
+            # Crear el token
+            token = create_token(data={"sub": user.nombre})
+            
+            # Imprimir el token en la consola
+            print(f'Token generado para {user.nombre}: {token}')
+            
+            return LoginResponse(nombre=user.nombre, token=token)
+        raise HTTPException(status_code=404, detail='Usuario o contraseña incorrectos')
+    else:
+        return "No Authorization"

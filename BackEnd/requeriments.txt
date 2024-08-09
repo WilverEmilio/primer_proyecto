@@ -1,5 +1,8 @@
 annotated-types==0.7.0
 anyio==4.4.0
+argon2-cffi==23.1.0
+argon2-cffi-bindings==21.2.0
+bcrypt==4.2.0
 certifi==2024.7.4
 cffi==1.17.0
 click==8.1.7
@@ -26,6 +29,7 @@ mysql-connector-python==9.0.0
 mysql-connector-python-rf==2.2.2
 mysqlclient==2.2.4
 orjson==3.10.6
+passlib==1.7.4
 pyasn1==0.6.0
 pycparser==2.22
 pydantic==2.8.2

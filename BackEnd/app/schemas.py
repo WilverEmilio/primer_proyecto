@@ -30,4 +30,4 @@ class LoginResponse(BaseModel):
     token: str
 
     class Config: 
-        orm_mode = True
+        from_attributes = True
