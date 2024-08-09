@@ -40,16 +40,20 @@ export default function CreateUser() {
         })
     }
     return(
-    <form>
+        <form>
         <label htmlFor="nombre">Nombre</label>
-        <input id = "nombre" type="text" onChange={handleTextName} value={textname} />
+        <input id="nombre" type="text" onChange={handleTextName} value={textname} />
+        
         <label htmlFor="contrasena">Contraseña</label>
-        <input id = "contrasena" type="password" onChange={handleTextPassword} value={textpassword} />
+        <input id="contrasena" type="password" onChange={handleTextPassword} value={textpassword} />
+        
         <label htmlFor="correo">Correo</label>
-        <input id = "correo" type="email" onChange={handleTextEmail}  value={textemail}/>
+        <input id="correo" type="email" onChange={handleTextEmail} value={textemail} />
+        
         <label htmlFor="cargo">Cargo</label>
-        <input id = "cargo" type="text" onChange={handleTextJob}  value={textjob}/>
-        <button type="submit" value={"Create User"} onClick={handleClicked}>Crear usuario</button>
-    </form>
+        <input id="cargo" type="text" onChange={handleTextJob} value={textjob} />
+        
+        <button type="submit" onClick={handleClicked}>Crear usuario</button>
+      </form>
     )
 }
