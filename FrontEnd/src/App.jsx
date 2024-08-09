@@ -5,6 +5,7 @@ import UserBox from './components/userBox';
 import CreateUser from './components/createUser';
 import Login from './components/login';
 import Products from './components/Products'; 
+import Dashboard from './components/dashboard';
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -24,8 +25,10 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/createUser" element={<CreateUser />} />
           <Route path="/Products" element={<Products />} />
+          <Route path="/Dashboard" element={<Dashboard />} />
         </Routes>
 
+        {/* Componente de lista de usuarios (opcional) */}
         {/* {
           users.map((user) => (
             <UserBox 
@@ -40,7 +43,7 @@ function App() {
         } */}
       </div>
     </Router>
-  )
+  );
 }
 
 export default App;

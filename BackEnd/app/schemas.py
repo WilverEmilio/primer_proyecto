@@ -28,6 +28,6 @@ class Login(BaseModel):
 class LoginResponse(BaseModel): 
     nombre: str
     token: str
-
+    
     class Config: 
         from_attributes = True

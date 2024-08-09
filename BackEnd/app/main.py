@@ -13,6 +13,7 @@ from passlib.context import CryptContext
 
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+from fastapi.responses import JSONResponse
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 SECRET_KEY = "663020057e3698f9f5152633db69f3e5284ca38ef799372ab0a73dea90ce160f"
@@ -102,11 +103,19 @@ def login(user: Login, db: Session = Depends(get_db)):
         if validate_user(user.nombre, user.contrasena, db):
             # Crear el token
             token = create_token(data={"sub": user.nombre})
+            expired = datetime.utcnow() + timedelta(seconds=TOKEN_SECONDS_EXPIRE)
             
-            # Imprimir el token en la consola
-            print(f'Token generado para {user.nombre}: {token}')
+            # Imprimir el token y la fecha de expiración en la consola del servidor
+            print(f"Token generado para {user.nombre}: {token}")
+            print(f"Expira en: {expired.strftime('%Y-%m-%d %H:%M:%S')} UTC")
             
-            return LoginResponse(nombre=user.nombre, token=token)
-        raise HTTPException(status_code=404, detail='Usuario o contraseña incorrectos')
-    else:
-        return "No Authorization"
+            # Configurar la cookie
+            response = JSONResponse(content={
+                "message": "Login successful",
+                "token": token,
+                "expires_at": expired.strftime('%Y-%m-%d %H:%M:%S UTC')
+            })
+            response.set_cookie(key="access_token", value=token, httponly=True, samesite="Strict", expires=TOKEN_SECONDS_EXPIRE)
+            
+            return response
+    raise HTTPException(status_code=400, detail="Invalid username or password")

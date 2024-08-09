@@ -1,10 +1,18 @@
-import { useState } from "react";
-import {Link} from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
     const [textname, setTextName] = useState("");
     const [textpassword, setTextPassword] = useState("");
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Eliminar la cookie cuando el componente Login se monta
+        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        console.log('Token eliminado al regresar al login');
+    }, []);
 
     function handleTextName(event) {
         setTextName(event.target.value);
@@ -14,65 +22,40 @@ export default function Login() {
         setTextPassword(event.target.value);
     }
 
-    async function handleClicked(event) {
+    async function handleLogin(event) {
         event.preventDefault();
-
-        if (textname === "" || textpassword === "") {
-            alert("Por favor llene todos los campos");
-            return;
-        }
-
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/login/", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    nombre: textname,
-                    contrasena: textpassword
-                })
-            });
+            const response = await axios.post('http://localhost:8000/api/login/', {
+                nombre: textname,
+                contrasena: textpassword,
+            }, { withCredentials: true });
+            
+            const { token, expires_at } = response.data;
 
-            if (response.ok) {
-                const data = await response.json();
-                const token = data.token;
+            console.log('Token:', token);
+            console.log('Expira en:', expires_at);
 
-                console.log('Token recibido:', token);
-
-                localStorage.setItem('token', token);
-
-                setTextName("");
-                setTextPassword("");
-
-                // Opcional: Redirigir al usuario o mostrar un mensaje de éxito
-                // window.location.href = '/dashboard'; // Ejemplo de redirección
-            } else {
-                const errorData = await response.json();
-                setError(errorData.detail || 'Error en el inicio de sesión');
-            }
+            navigate('/Dashboard'); 
         } catch (error) {
-            console.error('Error al iniciar sesión:', error);
-            setError('Error en el inicio de sesión');
+            setError("Error al iniciar sesión. Verifique sus credenciales y vuelva a intentarlo.");
+            console.error('Error during login:', error);
         }
     }
 
     return (
-        <form>
-            <label htmlFor="nombre">Nombre</label>
-            <input id="Nombre" type="text" onChange={(e) => setTextName(e.target.value)} value={textname} />
-            <label htmlFor="contrasena">Contraseña</label>
-            <input id="Contrasena" type="password" onChange={(e) => setTextPassword(e.target.value)} value={textpassword} />
-            <button type="submit" onClick={handleClicked}>Iniciar sesión</button>
-
-            {error && <p>{error}</p>}
-
-            <p style={{ marginTop: '20px' }}>
-            ¿No tienes cuenta? <Link to="/createUser">Crear usuario</Link>
-            </p>
-            <p>
-            <Link to="/products">Agregar Producto</Link>
-            </p>
-        </form>
+        <div>
+            <form onSubmit={handleLogin}>
+                <input type="text" value={textname} onChange={handleTextName} placeholder="Username" required />
+                <input type="password" value={textpassword} onChange={handleTextPassword} placeholder="Password" required />
+                {error && <p>{error}</p>}
+                <button type="submit">Login</button>
+                <p style={{ marginTop: '20px' }}>
+                ¿No tienes cuenta? <Link to="/createUser">Crear usuario</Link>
+                </p>
+                <p>
+                <Link to="/products">Agregar Producto</Link>
+                </p>
+                </form>
+        </div>
     );
 }
