@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import '../index.css'
 
 export default function Login() {
     const [textname, setTextName] = useState("");
@@ -44,6 +45,7 @@ export default function Login() {
 
     return (
         <div>
+            <h1>Abarrotería "La Bendición"</h1>
             <form onSubmit={handleLogin}>
                 <input type="text" value={textname} onChange={handleTextName} placeholder="Username" required />
                 <input type="password" value={textpassword} onChange={handleTextPassword} placeholder="Password" required />
