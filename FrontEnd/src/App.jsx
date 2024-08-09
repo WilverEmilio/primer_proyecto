@@ -26,7 +26,7 @@ function App() {
           <Route path="/Products" element={<Products />} />
         </Routes>
 
-        {
+        {/* {
           users.map((user) => (
             <UserBox 
               key={user.id_usuario} 
@@ -37,7 +37,7 @@ function App() {
               id_usuario={user.id_usuario} 
             />
           ))      
-        }
+        } */}
       </div>
     </Router>
   )
