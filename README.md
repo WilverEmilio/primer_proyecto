@@ -11,7 +11,7 @@ Nota: Darle click
 ![image](https://github.com/user-attachments/assets/96319db0-f4df-4bcf-a7f8-b04253892a01)
 Nota: Este crea un entorno virtual (Ver flecha verde)
 
-4.	Ahora abrir un terminal y poner el siguiente comando (Sin las comillas)
+4.	Ahora abrir un terminal y poner el siguiente comando (Sin las comillas) (deben de estar adentro de la carpeta Backend) 
 “.venv\Scripts\activate.bat”
 ![image](https://github.com/user-attachments/assets/19350b9f-1c79-40c9-829a-e930e25babc4)
 Este les encenderá el entorno virtual, ahora aparece (.venv)
