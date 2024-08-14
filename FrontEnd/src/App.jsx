@@ -6,10 +6,15 @@ import CreateUser from './components/createUser';
 import Login from './components/login';
 import Products from './components/Products'; 
 import Dashboard from './components/dashboard';
-import Perecederos from './components/productosPerecederos'
-import Noperecederos from './components/productosNoPerecederos'
+import Perecederos from './components/productosPerecederos';
+import Noperecederos from './components/productosNoPerecederos';
 
 
+import Categoria from './components/categoria';
+import Lote from './components/lote';
+import Presentacion from './components/presentacion';
+import Cliente from './components/cliente';
+import Proveedor from './components/proveedor';
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -30,6 +35,12 @@ function App() {
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/perecederos" element={<Perecederos />} />
           <Route path="/noperecederos" element={<Noperecederos />} />
+
+          <Route path="/categoria" element={<Categoria />} />
+          <Route path="/lote" element={<Lote />} />
+          <Route path="/presentacion" element={<Presentacion />} />
+          <Route path="/cliente" element={<Cliente />} />
+          <Route path="/proveedor" element={<Proveedor />} />
         </Routes>
 
         {/* Componente de lista de usuarios (opcional) */}
