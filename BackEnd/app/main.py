@@ -267,8 +267,27 @@ def get_empleado(idempleado: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail=f'El empleado con el id {idempleado} no se encuentra en la base de datos')
 
 @app.post('/api/empleados/', response_model=Empleado)
-def create_empleado(empleado: EmpleadoBase, db: Session = Depends(get_db)):
-    return crud.create_empleado(db=db, empleado=empleado)
+async def create_empleado(empleado: EmpleadoBase, db: Session = Depends(get_db)):
+    try:
+        nuevo_empleado = crud.create_empleado(db=db, empleado=empleado)
+        return nuevo_empleado
+    except ValueError as e:
+        print(e.json())
+        raise HTTPException(status_code=422, detail=str(e))
+
+@app.put("/api/empleadoDisponible/{idempleado}")
+def update_empleado_disponible(idempleado: int, disponible: bool, db: Session = Depends(get_db)):
+    empleado_by_id = crud.get_empleado_by_id(db=db, idempleado=idempleado)
+    if not empleado_by_id:
+        raise HTTPException(status_code=404, detail=f"El empleado con id {idempleado} no existe.")
+    
+    # Actualiza el campo 'disponible'
+    try:
+        empleado_actualizado = crud.update_empleado_disponible(db=db, idempleado=idempleado, disponible=disponible)
+        return empleado_actualizado
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error al actualizar el estado del empleado.")
+    
 
 @app.put('/api/empleadoUpdate/{idempleado}', response_model=Empleado)
 def update_empleado(idempleado: int, empleado: EmpleadoBase, db: Session = Depends(get_db)):

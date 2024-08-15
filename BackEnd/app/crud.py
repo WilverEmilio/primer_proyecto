@@ -200,7 +200,7 @@ def create_empleado(db: Session, empleado: EmpleadoBase):
         apellidos=empleado.apellidos,
         telefono=empleado.telefono,
         direccion=empleado.direccion,
-        disponible=True  # Agregar `disponible` con valor predeterminado
+        disponible = True  # Agregar `disponible` con valor predeterminado
     )
     db.add(new_empleado)
     db.commit()
@@ -217,3 +217,12 @@ def update_empleado(db: Session, idempleado: int, empleado: EmpleadoBase):
         db.commit()
         db.refresh(db_empleado)
     return db_empleado
+
+def update_empleado_disponible(db: Session, idempleado: int, disponible: bool):
+    empleado = db.query(Empleado).filter(Empleado.idempleado == idempleado).first()
+    if empleado:
+        empleado.disponible = disponible
+        db.commit()
+        db.refresh(empleado)
+        return empleado
+    return None

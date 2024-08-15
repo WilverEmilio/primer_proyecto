@@ -7,14 +7,15 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert";
+//import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert";
 
 export function Empleado() {
   const [empleados, setEmpleados] = useState([]);
   const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
+  const [apellidos, setApellido] = useState("");
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
+  const [disponible, setDisponible] = useState(true);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -43,7 +44,7 @@ export function Empleado() {
   const handleEdit = (id) => {
     const empleado = empleados.find((item) => item.idempleado === id);
     setNombre(empleado.nombre);
-    setApellido(empleado.apellido);
+    setApellido(empleado.apellidos);
     setTelefono(empleado.telefono);
     setDireccion(empleado.direccion);
     setEditingId(id);
@@ -52,22 +53,22 @@ export function Empleado() {
 
   const handleSave = async () => {
     try {
+      const empleadoData = {
+        nombre,
+        apellidos,
+        telefono,
+        direccion,
+        disponible,  // Booleano
+      };
+  
+      console.log(empleadoData);  // Imprime los datos que estás enviando
+  
       if (editingId) {
-        await axios.put(`http://localhost:8000/api/empleadoUpdate/${editingId}`, {
-          nombre,
-          apellido,
-          telefono,
-          direccion,
-        });
-        setEmpleados(empleados.map((item) => (item.idempleado === editingId ? { ...item, nombre, apellido, telefono, direccion } : item)));
+        // Editar empleado
+        await axios.put(`http://localhost:8000/api/empleadoUpdate/${editingId}`, empleadoData);
       } else {
-        const response = await axios.post("http://localhost:8000/api/empleados/", {
-          nombre,
-          apellido,
-          telefono,
-          direccion,
-          disponible: true,
-        });
+        // Crear nuevo empleado
+        const response = await axios.post("http://localhost:8000/api/empleados/", empleadoData);
         setEmpleados([...empleados, response.data]);
       }
       setShowForm(false);
@@ -76,7 +77,7 @@ export function Empleado() {
       console.error("Error al guardar el empleado:", error);
     }
   };
-
+  
   const handleDelete = (id) => {
     setShowDeleteConfirmation(true);
     setDeleteId(id);
@@ -137,7 +138,7 @@ export function Empleado() {
               <Input
                 id="lastName"
                 placeholder="Ingresa tus apellidos"
-                value={apellido}
+                value={apellidos}
                 onChange={(e) => setApellido(e.target.value)} />
             </div>
             <div className="space-y-2">
@@ -180,7 +181,7 @@ export function Empleado() {
               <TableRow key={item.idempleado}>
                 <TableCell>{item.idempleado}</TableCell>
                 <TableCell>{item.nombre}</TableCell>
-                <TableCell>{item.apellido}</TableCell>
+                <TableCell>{item.apellidos}</TableCell>
                 <TableCell>{item.telefono}</TableCell>
                 <TableCell>{item.direccion}</TableCell>
                 <TableCell>{item.disponible ? "Sí" : "No"}</TableCell>
@@ -188,7 +189,7 @@ export function Empleado() {
                   <div className="flex gap-2">
                     <Button onClick={() => handleEdit(item.idempleado)}>Editar</Button>
                     <Button onClick={() => handleDelete(item.idempleado)}>
-                      Eliminar
+                      Deshabilitar
                     </Button>
                   </div>
                 </TableCell>
@@ -197,20 +198,7 @@ export function Empleado() {
           </TableBody>
         </Table>
       </div>
-      {showDeleteConfirmation && (
-        <AlertDialog>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-              <AlertDialogDescription>Esta acción no se puede deshacer.</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={handleCancelDelete}>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleConfirmDelete}>Confirmar</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+
     </div>
   );
 }

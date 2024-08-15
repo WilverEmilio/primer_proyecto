@@ -78,13 +78,13 @@ export function Login() {
     <div className="flex items-center justify-center min-h-screen bg-background">
       <div className="mx-auto max-w-sm space-y-6 p-6 rounded-lg shadow-lg bg-card">
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold text-card-foreground">Ingreso al sistema</h1>
+          <h1 className="text-3xl font-bold text-card-foreground">Abarroteria</h1>
           <p className="text-muted-foreground">Introduzca su nombre de usuario y contraseña para iniciar sesión.</p>
         </div>
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="username" className="text-card-foreground">
-              Username
+              Usuario
             </Label>
             <Input
               id="username"
@@ -98,7 +98,7 @@ export function Login() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password" className="text-card-foreground">
-              Password
+              Contraseña
             </Label>
             <Input
               id="password"
@@ -114,7 +114,7 @@ export function Login() {
           <Button
             type="submit"
             className="w-full bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-            Sign In
+            Acceder
           </Button>
         </form>
       </div>
