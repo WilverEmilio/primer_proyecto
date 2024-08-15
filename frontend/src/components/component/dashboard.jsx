@@ -18,12 +18,14 @@ To read more about using these font, please visit the Next.js documentation:
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
 'use client';
-
+import { useRouter } from 'next/navigation'; // Hook de Next.js para la navegación
 import { useState } from 'react';
 import Link from "next/link";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import PresentacionPage from '@/app/presentacion/page';
+import CategoriaPage from '@/app/categoria/page';
 
 export function Dashboard() {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -56,7 +58,7 @@ export function Dashboard() {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleMenuClick('categories')}>
                 <Link href="#" prefetch={false}>
-                  Categories
+                  Categorias
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleMenuClick('presentations')}>
@@ -202,17 +204,14 @@ export function Dashboard() {
             </Card>
           </div>
         )}
+        {selectedSection === 'categories' && (
+          <div>
+            <CategoriaPage />
+          </div>
+        )}
         {selectedSection === 'presentations' && (
           <div>
-            <h2>Presentations Form</h2>
-            <form>
-              {/* Tu formulario aquí */}
-              <label>
-                Presentation Name:
-                <input type="text" name="name" />
-              </label>
-              <button type="submit">Submit</button>
-            </form>
+            <PresentacionPage />
           </div>
         )}
         {selectedSection === 'buy-products' && (

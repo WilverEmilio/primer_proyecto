@@ -104,7 +104,7 @@ def login(user: Login, db: Session = Depends(get_db)):
     raise HTTPException(status_code=400, detail="Invalid username or password")
 
 # Rutas para Categoria
-@app.get('/api/categorias/', response_model=List[Categoria])
+@app.get('/api/categoriasObtener/', response_model=List[Categoria])
 def get_categorias(db: Session = Depends(get_db)):
     return crud.get_categorias(db=db)
 
@@ -134,7 +134,7 @@ def delete_categoria(idcategoria: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail=f'La categoría con el id {idcategoria} no se encuentra en la base de datos')
 
 # Rutas para Presentacion
-@app.get('/api/presentaciones/', response_model=List[Presentacion])
+@app.get('/api/presentacionesObtener/', response_model=List[Presentacion])
 def get_presentaciones(db: Session = Depends(get_db)):
     return crud.get_presentaciones(db=db)
 
@@ -156,7 +156,8 @@ def update_presentacion(idpresentacion: int, presentacion: PresentacionBase, db:
         return updated_presentacion
     raise HTTPException(status_code=404, detail=f'La presentación con el id {idpresentacion} no se encuentra en la base de datos')
 
-@app.delete('/api/presentacion/{idpresentacion}', response_model=Presentacion)
+
+@app.delete('/api/presentacionDelete/{idpresentacion}', response_model=Presentacion)
 def delete_presentacion(idpresentacion: int, db: Session = Depends(get_db)):
     deleted_presentacion = crud.delete_presentacion(db=db, idpresentacion=idpresentacion)
     if deleted_presentacion:

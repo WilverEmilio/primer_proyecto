@@ -19,7 +19,8 @@ To read more about using these font, please visit the Next.js documentation:
 **/
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import axios from 'axios'
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -29,67 +30,90 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert"
 
 export function Presentacion() {
+
+  const [textname, setTextName] = useState("");
+  const [textDescription, setTextDescription] = useState("");
+  const [error, setError] = useState("");
+  const [data, setData] = useState([]); // Actualizado para manejar los datos de la API
   const [showForm, setShowForm] = useState(false)
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      description: "This is a sample description.",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      description: "Another sample description.",
-    },
-    {
-      id: 3,
-      name: "Bob Johnson",
-      description: "This is a third sample description.",
-    },
-  ])
   const [editingId, setEditingId] = useState(null)
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
+
+  useEffect(() => {
+    // Obtener los datos de la API cuando el componente se monte
+    async function fetchData() {
+      try {
+        const response = await axios.get('http://localhost:8000/api/presentacionesObtener/');
+        const fetchedData = response.data.map(item => ({
+          id: item.idpresentacion,
+          name: item.nombre,
+          description: item.descripcion
+        }));
+        setData(fetchedData);
+      } catch (error) {
+        console.error('Error al obtener los datos:', error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  function handleTextName(event) {
+    setTextName(event.target.value);
+  }
+
+  function handleTextDescription(event) {
+    setTextDescription(event.target.value);
+  }
+
+  async function handleSave() {
+    try {
+      await axios.post('http://localhost:8000/api/presentaciones/', {
+        nombre: textname,
+        descripcion: textDescription,
+      }, { withCredentials: true });
+
+      // Actualiza los datos después de guardar
+      const response = await axios.get('http://localhost:8000/api/presentacionesObtener/');
+      const fetchedData = response.data.map(item => ({
+        id: item.idpresentacion,
+        name: item.nombre,
+        description: item.descripcion
+      }));
+      setData(fetchedData);
+      
+    } catch (error) {
+      setError("Error al crear la presentación");
+    }
+    setShowForm(false);
+    setEditingId(null);
+  }
+
   const handleAdd = () => {
-    setShowForm(true)
-    setEditingId(null)
+    setShowForm(true);
+    setEditingId(null);
   }
   const handleEdit = (id) => {
-    setShowForm(true)
-    setEditingId(id)
+    setShowForm(true);
+    setEditingId(id);
   }
   const handleDelete = (id) => {
-    setShowDeleteConfirmation(true)
-    setDeleteId(id)
+    setShowDeleteConfirmation(true);
+    setDeleteId(id);
   }
   const handleConfirmDelete = () => {
-    setData(data.filter((item) => item.id !== deleteId))
-    setShowDeleteConfirmation(false)
-    setDeleteId(null)
+    setData(data.filter((item) => item.id !== deleteId));
+    setShowDeleteConfirmation(false);
+    setDeleteId(null);
   }
   const handleCancelDelete = () => {
-    setShowDeleteConfirmation(false)
-    setDeleteId(null)
-  }
-  const handleSave = () => {
-    const name = document.getElementById("name").value
-    const description = document.getElementById("description").value
-    if (editingId) {
-      setData(data.map((item) => {
-        if (item.id === editingId) {
-          return { ...item, name, description }
-        }
-        return item
-      }))
-    } else {
-      setData([...data, { id: data.length + 1, name, description }])
-    }
-    setShowForm(false)
-    setEditingId(null)
+    setShowDeleteConfirmation(false);
+    setDeleteId(null);
   }
   const handleCloseForm = () => {
-    setShowForm(false)
-    setEditingId(null)
+    setShowForm(false);
+    setEditingId(null);
   }
   return (
     (<div className="w-full max-w-3xl mx-auto">
@@ -117,7 +141,8 @@ export function Presentacion() {
               <Input
                 id="name"
                 placeholder="Ingresa tu nombre"
-                defaultValue={editingId ? data.find((item) => item.id === editingId).name : ""} />
+                value={textname}
+                onChange={handleTextName} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Descripción</Label>
@@ -125,7 +150,8 @@ export function Presentacion() {
                 id="description"
                 placeholder="Escribe una breve descripción"
                 rows={3}
-                defaultValue={editingId ? data.find((item) => item.id === editingId).description : ""} />
+                value={textDescription}
+                onChange={handleTextDescription} />
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
@@ -152,7 +178,6 @@ export function Presentacion() {
                 <TableCell>
                   <div className="flex gap-2">
                     <Button onClick={() => handleEdit(item.id)}>Editar</Button>
-                    <Button onClick={() => handleDelete(item.id)}>Eliminar</Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -160,20 +185,6 @@ export function Presentacion() {
           </TableBody>
         </Table>
       </div>
-      {showDeleteConfirmation && (
-        <AlertDialog>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-              <AlertDialogDescription>Esta acción no se puede deshacer.</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={handleCancelDelete}>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleConfirmDelete}>Eliminar</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
     </div>)
   );
 }

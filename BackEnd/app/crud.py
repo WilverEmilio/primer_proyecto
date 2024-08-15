@@ -74,7 +74,9 @@ def update_presentacion(db: Session, idpresentacion: int, presentacion: Presenta
         db_presentacion.descripcion = presentacion.descripcion
         db.commit()
         db.refresh(db_presentacion)
-    return db_presentacion
+        return db_presentacion
+    return None
+
 
 def delete_presentacion(db: Session, idpresentacion: int):
     db_presentacion = db.query(Presentacion).filter(Presentacion.idpresentacion == idpresentacion).first()
