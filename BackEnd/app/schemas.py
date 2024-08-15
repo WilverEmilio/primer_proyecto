@@ -4,29 +4,32 @@ from datetime import date
 
 # Esquemas de Usuario
 class Datos_Usuarios(BaseModel): 
-    nombre: str
-    cargo: str
-    correo: str
+    usuario: str
     contrasena: str
+    rol: str
+    email: str
+    disponible: bool
+    idempleado: int
     
     class Config: 
         from_attributes = True
     
 class Buscar_Usuario(Datos_Usuarios): 
-    id_usuario: int
+    idusuario: int
 
     class Config: 
         from_attributes = True
         
 class Login(BaseModel): 
-    nombre: str
+    usuario: str
     contrasena: str
 
     class Config: 
         from_attributes = True
         
 class LoginResponse(BaseModel): 
-    nombre: str
+    message: str
+    usuario: str
     token: str
     
     class Config: 
@@ -35,43 +38,45 @@ class LoginResponse(BaseModel):
 class CategoriaBase(BaseModel):
     nombre: str
     descripcion: str
+    
+    class Config: 
+        from_attributes = True
 
-class CategoriaCreate(CategoriaBase):
-    pass
 
 class Categoria(CategoriaBase):
     idcategoria: int
 
-    class Config:
-        orm_mode = True
+    class Config: 
+        from_attributes = True
 
 class PresentacionBase(BaseModel):
     nombre: str
     descripcion: str
+    
+    class Config: 
+        from_attributes = True
 
-class PresentacionCreate(PresentacionBase):
-    pass
+
 
 class Presentacion(PresentacionBase):
     idpresentacion: int
 
-    class Config:
-        orm_mode = True
+    class Config: 
+        from_attributes = True
 
-class LoteBase(BaseModel):
-    idarticulo: int
-    numero_lote: str
-    cantidad: int
-    fecha_vencimiento: Optional[date] = None
+# class LoteBase(BaseModel):
+#     idarticulo: int
+#     numero_lote: str
+#     cantidad: int
+#     fecha_vencimiento: Optional[date] = None
 
-class LoteCreate(LoteBase):
-    pass
 
-class Lote(LoteBase):
-    idlote: int
 
-    class Config:
-        orm_mode = True
+# class Lote(LoteBase):
+#     idlote: int
+
+#     class Config: 
+#         from_attributes = True
 
 # Esquemas de Cliente
 class ClienteBase(BaseModel):
@@ -82,15 +87,14 @@ class ClienteBase(BaseModel):
     telefono: Optional[str] = None
     email: Optional[str] = None
 
-class ClienteCreate(ClienteBase):
-    pass
+
 
 class Cliente(ClienteBase):
     idcliente: int
 
-    class Config:
-        orm_mode = True
-
+    class Config: 
+        from_attributes = True
+        
 class ProveedorBase(BaseModel):
     razon_social: str
     tipo_documento: Optional[str] = None
@@ -99,12 +103,25 @@ class ProveedorBase(BaseModel):
     telefono: Optional[str] = None
     email: Optional[str] = None
     url: Optional[str] = None
-
-class ProveedorCreate(ProveedorBase):
-    pass
-
+    
 class Proveedor(ProveedorBase):
     idproveedor: int
 
-    class Config:
-        orm_mode = True
+    class Config: 
+        from_attributes = True
+        
+class EmpleadoBase(BaseModel):
+    nombre: str
+    apellidos: str
+    telefono: Optional[str] = None
+    direccion: Optional[str] = None
+    disponible: bool
+    
+    class Config: 
+        from_attributes = True
+        
+class Empleado(EmpleadoBase):
+    idempleado: int
+
+    class Config: 
+        from_attributes = True

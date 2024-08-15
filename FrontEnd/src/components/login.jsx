@@ -27,7 +27,7 @@ export default function Login() {
         event.preventDefault();
         try {
             const response = await axios.post('http://localhost:8000/api/login/', {
-                nombre: textname,
+                usuario: textname,
                 contrasena: textpassword,
             }, { withCredentials: true });
             
