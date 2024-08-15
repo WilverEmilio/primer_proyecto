@@ -255,7 +255,7 @@ def delete_proveedor(idproveedor: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail=f'El proveedor con el id {idproveedor} no se encuentra en la base de datos')
 
 # Rutas para Empleado
-@app.get('/api/empleados/', response_model=List[Empleado])
+@app.get('/api/empleadosObtener/', response_model=List[Empleado])
 def get_empleados(db: Session = Depends(get_db)):
     return crud.get_empleado(db=db)
 
@@ -270,7 +270,7 @@ def get_empleado(idempleado: int, db: Session = Depends(get_db)):
 def create_empleado(empleado: EmpleadoBase, db: Session = Depends(get_db)):
     return crud.create_empleado(db=db, empleado=empleado)
 
-@app.put('/api/empleado/{idempleado}', response_model=Empleado)
+@app.put('/api/empleadoUpdate/{idempleado}', response_model=Empleado)
 def update_empleado(idempleado: int, empleado: EmpleadoBase, db: Session = Depends(get_db)):
     updated_empleado = crud.update_empleado(db=db, idempleado=idempleado, empleado=empleado)
     if updated_empleado:

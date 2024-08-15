@@ -26,6 +26,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import PresentacionPage from '@/app/presentacion/page';
 import CategoriaPage from '@/app/categoria/page';
+import EmpleadoPage from '@/app/empleado/page';
 
 export function Dashboard() {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -94,7 +95,7 @@ export function Dashboard() {
             <DropdownMenuContent>
               <DropdownMenuItem onClick={() => handleMenuClick('employees')}>
                 <Link href="#" prefetch={false}>
-                  Employees
+                  Empleados
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleMenuClick('customers')}>
@@ -228,8 +229,7 @@ export function Dashboard() {
         )}
         {selectedSection === 'employees' && (
           <div>
-            <h2>Employees</h2>
-            {/* Contenido de "Employees" aquí */}
+            <EmpleadoPage />
           </div>
         )}
         {selectedSection === 'customers' && (

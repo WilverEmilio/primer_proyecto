@@ -195,8 +195,25 @@ def get_empleado_by_id(db: Session, idempleado: int):
     return db.query(Empleado).filter(Empleado.idempleado == idempleado).first()
 
 def create_empleado(db: Session, empleado: EmpleadoBase):
-    new_empleado = Empleado(nombre=empleado.nombre, apellidos=empleado.apellidos, telefono=empleado.telefono, direccion=empleado.direccion)
+    new_empleado = Empleado(
+        nombre=empleado.nombre,
+        apellidos=empleado.apellidos,
+        telefono=empleado.telefono,
+        direccion=empleado.direccion,
+        disponible=True  # Agregar `disponible` con valor predeterminado
+    )
     db.add(new_empleado)
     db.commit()
     db.refresh(new_empleado)
     return new_empleado
+
+def update_empleado(db: Session, idempleado: int, empleado: EmpleadoBase):
+    db_empleado = db.query(Empleado).filter(Empleado.idempleado == idempleado).first()
+    if db_empleado:
+        db_empleado.nombre = empleado.nombre
+        db_empleado.apellidos = empleado.apellidos
+        db_empleado.telefono = empleado.telefono
+        db_empleado.direccion = empleado.direccion
+        db.commit()
+        db.refresh(db_empleado)
+    return db_empleado
