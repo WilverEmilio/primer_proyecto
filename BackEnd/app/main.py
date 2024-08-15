@@ -22,7 +22,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173",  # El origen de tu aplicación React
+    "http://localhost:3000",  # El origen de tu aplicación React
     "http://localhost",       # Puedes agregar más orígenes si es necesario
     "http://127.0.0.1"
 ]
