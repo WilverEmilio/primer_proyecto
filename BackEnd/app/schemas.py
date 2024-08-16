@@ -66,19 +66,19 @@ class Presentacion(PresentacionBase):
     class Config: 
         from_attributes = True
 
-# class LoteBase(BaseModel):
-#     idarticulo: int
-#     numero_lote: str
-#     cantidad: int
-#     fecha_vencimiento: Optional[date] = None
+class LoteBase(BaseModel):
+     idarticulo: int
+     numero_lote: str
+     cantidad: int
+     fecha_vencimiento: Optional[date] = None
 
 
 
-# class Lote(LoteBase):
-#     idlote: int
+class Lote(LoteBase):
+     idlote: int
 
-#     class Config: 
-#         from_attributes = True
+     class Config: 
+         from_attributes = True
 
 # Esquemas de Cliente
 class ClienteBase(BaseModel):
@@ -165,8 +165,6 @@ class HorarioBase(BaseModel):
     class Config:
         from_attributes = True
 
-class HorarioCreate(HorarioBase):
-    pass
 
 class Horario(HorarioBase):
     idhorario: int
@@ -186,8 +184,6 @@ class VentaBase(BaseModel):
     class Config:
         from_attributes = True
 
-class VentaCreate(VentaBase):
-    pass
 
 class Venta(VentaBase):
     idventa: int
@@ -206,8 +202,6 @@ class DetalleVentaBase(BaseModel):
     class Config:
         from_attributes = True
 
-class DetalleVentaCreate(DetalleVentaBase):
-    pass
 
 class DetalleVenta(DetalleVentaBase):
     iddetalle_venta: int

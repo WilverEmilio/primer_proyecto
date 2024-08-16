@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario, Venta
-from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioCreate, VentaCreate, DetalleVentaCreate
+from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, DetalleVentaBase, VentaBase
 from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Articulo, Lote, DetalleVenta
 from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase
 from .schemas import ArticuloBase, LoteBase
@@ -303,7 +303,7 @@ def delete_horario(db: Session, horario_id: int):
     return db_horario
 
 #Crud venta
-def create_venta(db: Session, venta: VentaCreate):
+def create_venta(db: Session, venta: VentaBase):
     db_venta = Venta(**venta.dict())
     db.add(db_venta)
     db.commit()
@@ -316,7 +316,7 @@ def get_ventas(db: Session, skip: int = 0, limit: int = 10):
 def get_venta(db: Session, venta_id: int):
     return db.query(Venta).filter(Venta.idventa == venta_id).first()
 
-def update_venta(db: Session, venta_id: int, venta_update: VentaCreate):
+def update_venta(db: Session, venta_id: int, venta_update: VentaBase):
     db_venta = db.query(Venta).filter(Venta.idventa == venta_id).first()
     if db_venta:
         for key, value in venta_update.dict().items():
@@ -333,7 +333,7 @@ def delete_venta(db: Session, venta_id: int):
     return db_venta
 
 #Crud Detalle_venta
-def create_detalle_venta(db: Session, detalle_venta: DetalleVentaCreate):
+def create_detalle_venta(db: Session, detalle_venta: DetalleVentaBase):
     db_detalle_venta = DetalleVenta(**detalle_venta.dict())
     db.add(db_detalle_venta)
     db.commit()
@@ -346,7 +346,7 @@ def get_detalles_venta(db: Session, skip: int = 0, limit: int = 10):
 def get_detalle_venta(db: Session, detalle_venta_id: int):
     return db.query(DetalleVenta).filter(DetalleVenta.iddetalle_venta == detalle_venta_id).first()
 
-def update_detalle_venta(db: Session, detalle_venta_id: int, detalle_venta_update: DetalleVentaCreate):
+def update_detalle_venta(db: Session, detalle_venta_id: int, detalle_venta_update: DetalleVentaBase):
     db_detalle_venta = db.query(DetalleVenta).filter(DetalleVenta.iddetalle_venta == detalle_venta_id).first()
     if db_detalle_venta:
         for key, value in detalle_venta_update.dict().items():

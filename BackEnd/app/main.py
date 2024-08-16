@@ -5,9 +5,8 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from . import crud
 from .conexion import SessionLocal, engine
-from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioBase, Horario
-from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioCreate, Horario, VentaCreate, Venta
-from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioCreate, Horario, VentaCreate, Venta, DetalleVentaCreate, DetalleVenta
+from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioBase, Horario, VentaBase
+from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse,  Horario,  Venta,  DetalleVenta, DetalleVentaBase
 from .schemas import Categoria,  Presentacion,   Cliente,  Proveedor, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, Empleado
 from .schemas import Articulo, Lote, ArticuloBase, LoteBase
 from .models import Base
@@ -384,11 +383,11 @@ def get_venta(idventa: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail=f'La venta con el id {idventa} no se encuentra en la base de datos')
 
 @app.post('/api/ventas/', response_model=Venta)
-def create_venta(venta: VentaCreate, db: Session = Depends(get_db)):
+def create_venta(venta: VentaBase, db: Session = Depends(get_db)):
     return crud.create_venta(db=db, venta=venta)
 
 @app.put('/api/venta/{idventa}', response_model=Venta)
-def update_venta(idventa: int, venta: VentaCreate, db: Session = Depends(get_db)):
+def update_venta(idventa: int, venta: VentaBase, db: Session = Depends(get_db)):
     updated_venta = crud.update_venta(db=db, venta_id=idventa, venta_update=venta)
     if updated_venta:
         return updated_venta
@@ -414,11 +413,11 @@ def get_detalle_venta(iddetalle_venta: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail=f'El detalle de venta con el id {iddetalle_venta} no se encuentra en la base de datos')
 
 @app.post('/api/detalles_venta/', response_model=DetalleVenta)
-def create_detalle_venta(detalle_venta: DetalleVentaCreate, db: Session = Depends(get_db)):
+def create_detalle_venta(detalle_venta: DetalleVentaBase, db: Session = Depends(get_db)):
     return crud.create_detalle_venta(db=db, detalle_venta=detalle_venta)
 
 @app.put('/api/detalle_venta/{iddetalle_venta}', response_model=DetalleVenta)
-def update_detalle_venta(iddetalle_venta: int, detalle_venta: DetalleVentaCreate, db: Session = Depends(get_db)):
+def update_detalle_venta(iddetalle_venta: int, detalle_venta: DetalleVentaBase, db: Session = Depends(get_db)):
     updated_detalle_venta = crud.update_detalle_venta(db=db, detalle_venta_id=iddetalle_venta, detalle_venta_update=detalle_venta)
     if updated_detalle_venta:
         return updated_detalle_venta

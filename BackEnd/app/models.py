@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Date, Time, Enum, ForeignKey, Boolean, Decimal
+from sqlalchemy import Column, Integer, String, Date, Time, Enum, ForeignKey, Boolean
+from sqlalchemy.types import DECIMAL
 from sqlalchemy.orm import relationship
 from .conexion import Base
 
@@ -27,17 +28,15 @@ class Presentacion(Base):
     nombre = Column(String(50), nullable=False)
     descripcion = Column(String(256), nullable=False)
 
-# # Modelo de Lote
-# class Lote(Base):
-#     __tablename__ = 'lote'
-#     idlote = Column(Integer, primary_key=True, index=True)
-#     idarticulo = Column(Integer, ForeignKey('articulo.idarticulo'))
-#     numero_lote = Column(String(50), nullable=False)
-#     cantidad = Column(Integer, nullable=False)
-#     fecha_vencimiento = Column(Date, nullable=True)
+# Modelo de Lote
+class Lote(Base):
+     __tablename__ = 'lote'
+     idlote = Column(Integer, primary_key=True, index=True)
+     idarticulo = Column(Integer, ForeignKey('articulo.idarticulo'))
+     numero_lote = Column(String(50), nullable=False)
+     cantidad = Column(Integer, nullable=False)
+     fecha_vencimiento = Column(Date, nullable=True)
 
-#     # Relación con el modelo Articulo
-#     articulo = relationship("Articulo", back_populates="lotes")
 
 # Modelo de Cliente
 class Cliente(Base):
@@ -81,8 +80,7 @@ class Horario(Base):
     dia = Column(Enum('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'), nullable=False)
     hora_inicio = Column(Time, nullable=False)
     hora_fin = Column(Time, nullable=False)
-    
-    usuario = relationship("Usuario", back_populates="horarios")
+
 
 #Modelo Venta
 class Venta(Base):
@@ -95,10 +93,8 @@ class Venta(Base):
     serie_comprobante = Column(String(7))
     num_comprobante = Column(String(10))
     fecha = Column(Date, nullable=False)
-    impuesto = Column(Decimal(4, 2), nullable=False)
+    impuesto = Column(DECIMAL(4, 2), nullable=False)
     
-    cliente = relationship("Cliente", back_populates="ventas")
-    usuario = relationship("Usuario", back_populates="ventas")
 
 #Modelo detalle_venta
 class DetalleVenta(Base):
@@ -108,8 +104,16 @@ class DetalleVenta(Base):
     idventa = Column(Integer, ForeignKey('venta.idventa'))
     iddetalle_ingreso = Column(Integer, ForeignKey('detalle_ingreso.iddetalle_ingreso'))
     cantidad = Column(Integer, nullable=False)
-    precio_venta = Column(Decimal(10, 2), nullable=False)
-    descuento = Column(Decimal(10, 2))
+    precio_venta = Column(DECIMAL(10, 2), nullable=False)
+    descuento = Column(DECIMAL(10, 2))
 
-    venta = relationship("Venta", back_populates="detalles_venta")
-    detalle_ingreso = relationship("DetalleIngreso", back_populates="detalles_venta")
+#Modelo de Articulo
+class Articulo(Base):
+    __tablename__ = "articulo"
+    idarticulo = Column(Integer, primary_key=True, index=True)
+    idcategoria = Column(Integer, ForeignKey('categoria.idcategoria'))
+    idpresentacion = Column(Integer, ForeignKey('presentacion.idpresentacion'))
+    codigo = Column(String(50), nullable=False)
+    nombre = Column(String(100), nullable=False)
+    descripcion = Column(String(256), nullable=True)
+    perecedero = Column(Boolean, nullable=False, default=False)
