@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from . import crud
 from .conexion import SessionLocal, engine
-from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse
+from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioCreate, Horario
 from .schemas import Categoria,  Presentacion,   Cliente,  Proveedor, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, Empleado
 from .models import Base
 from passlib.context import CryptContext
@@ -302,3 +302,33 @@ def delete_empleado(idempleado: int, db: Session = Depends(get_db)):
     if deleted_empleado:
         return deleted_empleado
     raise HTTPException(status_code=404, detail=f'El empleado con el id {idempleado} no se encuentra en la base de datos')
+
+#Rutas Horarios
+@app.get('/api/horarios/', response_model=list[Horario])
+def get_horarios(db: Session = Depends(get_db)):
+    return crud.get_horarios(db=db)
+
+@app.get('/api/horario/{idhorario}', response_model=Horario)
+def get_horario(idhorario: int, db: Session = Depends(get_db)):
+    horario = crud.get_horario(db=db, horario_id=idhorario)
+    if horario:
+        return horario
+    raise HTTPException(status_code=404, detail=f'El horario con el id {idhorario} no se encuentra en la base de datos')
+
+@app.post('/api/horarios/', response_model=Horario)
+def create_horario(horario: HorarioCreate, db: Session = Depends(get_db)):
+    return crud.create_horario(db=db, horario=horario)
+
+@app.put('/api/horario/{idhorario}', response_model=Horario)
+def update_horario(idhorario: int, horario: HorarioCreate, db: Session = Depends(get_db)):
+    updated_horario = crud.update_horario(db=db, horario_id=idhorario, horario_update=horario)
+    if updated_horario:
+        return updated_horario
+    raise HTTPException(status_code=404, detail=f'El horario con el id {idhorario} no se encuentra en la base de datos')
+
+@app.delete('/api/horario/{idhorario}', response_model=Horario)
+def delete_horario(idhorario: int, db: Session = Depends(get_db)):
+    deleted_horario = crud.delete_horario(db=db, horario_id=idhorario)
+    if deleted_horario:
+        return deleted_horario
+    raise HTTPException(status_code=404, detail=f'El horario con el id {idhorario} no se encuentra en la base de datos')

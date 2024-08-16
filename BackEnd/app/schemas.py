@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime import date
+from datetime import date, time
+import enum
 
 # Esquemas de Usuario
 class Datos_Usuarios(BaseModel): 
@@ -124,4 +125,29 @@ class Empleado(EmpleadoBase):
     idempleado: int
 
     class Config: 
+        from_attributes = True
+
+#Esquema Horario
+class DiaEnum(str, enum.Enum):
+    Lunes = 'Lunes'
+    Martes = 'Martes'
+    Miércoles = 'Miércoles'
+    Jueves = 'Jueves'
+    Viernes = 'Viernes'
+    Sábado = 'Sábado'
+    Domingo = 'Domingo'
+
+class HorarioBase(BaseModel):
+    idusuario: int
+    dia: DiaEnum
+    hora_inicio: time
+    hora_fin: time
+
+    class Config:
+        from_attributes = True
+
+class Horario(HorarioBase):
+    idhorario: int
+
+    class Config:
         from_attributes = True
