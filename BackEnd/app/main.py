@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from . import crud
 from .conexion import SessionLocal, engine
-from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioCreate, Horario
+from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioBase, Horario
 from .schemas import Categoria,  Presentacion,   Cliente,  Proveedor, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, Empleado
 from .schemas import Articulo, Lote, ArticuloBase, LoteBase
 from .models import Base
@@ -338,6 +338,7 @@ def delete_articulo(idarticulo: int, db: Session = Depends(get_db)):
     if deleted_articulo:
         return deleted_articulo
     raise HTTPException(status_code=404, detail=f'El artículo con el id {idarticulo} no se encuentra en la base de datos')
+
 #Rutas Horarios
 @app.get('/api/horarios/', response_model=list[Horario])
 def get_horarios(db: Session = Depends(get_db)):
@@ -351,11 +352,11 @@ def get_horario(idhorario: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail=f'El horario con el id {idhorario} no se encuentra en la base de datos')
 
 @app.post('/api/horarios/', response_model=Horario)
-def create_horario(horario: HorarioCreate, db: Session = Depends(get_db)):
+def create_horario(horario: HorarioBase, db: Session = Depends(get_db)):
     return crud.create_horario(db=db, horario=horario)
 
 @app.put('/api/horario/{idhorario}', response_model=Horario)
-def update_horario(idhorario: int, horario: HorarioCreate, db: Session = Depends(get_db)):
+def update_horario(idhorario: int, horario: HorarioBase, db: Session = Depends(get_db)):
     updated_horario = crud.update_horario(db=db, horario_id=idhorario, horario_update=horario)
     if updated_horario:
         return updated_horario

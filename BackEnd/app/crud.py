@@ -4,7 +4,7 @@ from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Emple
 from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase
 from .schemas import ArticuloBase, LoteBase
 from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario
-from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioCreate
+from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioBase
 
 # CRUD para Usuario
 def get_usuarios(db: Session):
@@ -272,7 +272,7 @@ def delete_articulo(db: Session, idarticulo: int):
     return db_articulo
 
 #Crud para Horarios
-def create_horario(db: Session, horario: HorarioCreate):
+def create_horario(db: Session, horario: HorarioBase):
     db_horario = Horario(**horario.dict())
     db.add(db_horario)
     db.commit()
@@ -285,7 +285,7 @@ def get_horarios(db: Session, skip: int = 0, limit: int = 10):
 def get_horario(db: Session, horario_id: int):
     return db.query(Horario).filter(Horario.idhorario == horario_id).first()
 
-def update_horario(db: Session, horario_id: int, horario_update: HorarioCreate):
+def update_horario(db: Session, horario_id: int, horario_update: HorarioBase):
     db_horario = db.query(Horario).filter(Horario.idhorario == horario_id).first()
     if db_horario:
         for key, value in horario_update.dict().items():

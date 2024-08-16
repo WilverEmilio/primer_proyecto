@@ -36,8 +36,6 @@ class Lote(Base):
      cantidad = Column(Integer, nullable=False)
      fecha_vencimiento = Column(Date, nullable=True)
 
-    # Relación con el modelo Articulo
-     articulo = relationship("Articulo", back_populates="lotes")
 
 # Modelo de Cliente
 class Cliente(Base):
@@ -93,4 +91,3 @@ class Horario(Base):
     hora_inicio = Column(Time, nullable=False)
     hora_fin = Column(Time, nullable=False)
     
-    usuario = relationship("Usuario", back_populates="horarios")

@@ -142,7 +142,8 @@ class ArticuloBase(BaseModel):
 class Articulo(ArticuloBase):
     idarticulo: int
 
-    class Config: 
+    class Config:
+        from_attributes = True
 
 #Esquema Horario
 class DiaEnum(str, enum.Enum):
@@ -153,7 +154,8 @@ class DiaEnum(str, enum.Enum):
     Viernes = 'Viernes'
     Sábado = 'Sábado'
     Domingo = 'Domingo'
-
+    
+    
 class HorarioBase(BaseModel):
     idusuario: int
     dia: DiaEnum
