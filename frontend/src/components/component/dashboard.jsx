@@ -27,6 +27,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import PresentacionPage from '@/app/presentacion/page';
 import CategoriaPage from '@/app/categoria/page';
 import EmpleadoPage from '@/app/empleado/page';
+import ClientePage from '@/app/cliente/page';
 
 export function Dashboard() {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -110,7 +111,7 @@ export function Dashboard() {
             className="px-4 py-2 rounded-md hover:bg-primary/80 transition-colors"
             onClick={() => handleMenuClick('clients')}
           >
-            Clients
+            Clientes
           </Link>
           <DropdownMenu>
             <DropdownMenuTrigger className="px-4 py-2 rounded-md hover:bg-primary/80 transition-colors flex items-center">
@@ -240,8 +241,7 @@ export function Dashboard() {
         )}
         {selectedSection === 'clients' && (
           <div>
-            <h2>Clients</h2>
-            {/* Contenido de "Clients" aquí */}
+            <ClientePage />
           </div>
         )}
         {selectedSection === 'reports' && (

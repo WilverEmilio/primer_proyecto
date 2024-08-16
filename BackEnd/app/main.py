@@ -195,7 +195,7 @@ def delete_presentacion(idpresentacion: int, db: Session = Depends(get_db)):
 #     raise HTTPException(status_code=404, detail=f'El lote con el id {idlote} no se encuentra en la base de datos')
 
 # Rutas para Cliente
-@app.get('/api/clientes/', response_model=List[Cliente])
+@app.get('/api/clientesObtener/', response_model=List[Cliente])
 def get_clientes(db: Session = Depends(get_db)):
     return crud.get_clientes(db=db)
 
@@ -210,14 +210,14 @@ def get_cliente(idcliente: int, db: Session = Depends(get_db)):
 def create_cliente(cliente: ClienteBase, db: Session = Depends(get_db)):
     return crud.create_cliente(db=db, cliente=cliente)
 
-@app.put('/api/cliente/{idcliente}', response_model=Cliente)
+@app.put('/api/clienteActualizar/{idcliente}', response_model=Cliente)
 def update_cliente(idcliente: int, cliente: ClienteBase, db: Session = Depends(get_db)):
     updated_cliente = crud.update_cliente(db=db, idcliente=idcliente, cliente=cliente)
     if updated_cliente:
         return updated_cliente
     raise HTTPException(status_code=404, detail=f'El cliente con el id {idcliente} no se encuentra en la base de datos')
 
-@app.delete('/api/cliente/{idcliente}', response_model=Cliente)
+@app.delete('/api/clienteDelete/{idcliente}', response_model=Cliente)
 def delete_cliente(idcliente: int, db: Session = Depends(get_db)):
     deleted_cliente = crud.delete_cliente(db=db, idcliente=idcliente)
     if deleted_cliente:
