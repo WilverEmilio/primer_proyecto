@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado
+from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Articulo, Lote
 from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase
-
+from .schemas import ArticuloBase, LoteBase
 # CRUD para Usuario
 def get_usuarios(db: Session):
     return db.query(Usuario).all()
@@ -85,37 +85,37 @@ def delete_presentacion(db: Session, idpresentacion: int):
         db.commit()
     return db_presentacion
 
-# # CRUD para Lote
-# def get_lotes(db: Session):
-#     return db.query(Lote).all()
+# CRUD para Lote
+def get_lotes(db: Session):
+     return db.query(Lote).all()
 
-# def get_lote_by_id(db: Session, idlote: int):
-#     return db.query(Lote).filter(Lote.idlote == idlote).first()
+def get_lote_by_id(db: Session, idlote: int):
+     return db.query(Lote).filter(Lote.idlote == idlote).first()
 
-# def create_lote(db: Session, lote: LoteBase):
-#     new_lote = Lote(idarticulo=lote.idarticulo, numero_lote=lote.numero_lote, cantidad=lote.cantidad, fecha_vencimiento=lote.fecha_vencimiento)
-#     db.add(new_lote)
-#     db.commit()
-#     db.refresh(new_lote)
-#     return new_lote
+def create_lote(db: Session, lote: LoteBase):
+     new_lote = Lote(idarticulo=lote.idarticulo, numero_lote=lote.numero_lote, cantidad=lote.cantidad, fecha_vencimiento=lote.fecha_vencimiento)
+     db.add(new_lote)
+     db.commit()
+     db.refresh(new_lote)
+     return new_lote
 
-# def update_lote(db: Session, idlote: int, lote: LoteBase):
-#     db_lote = db.query(Lote).filter(Lote.idlote == idlote).first()
-#     if db_lote:
-#         db_lote.idarticulo = lote.idarticulo
-#         db_lote.numero_lote = lote.numero_lote
-#         db_lote.cantidad = lote.cantidad
-#         db_lote.fecha_vencimiento = lote.fecha_vencimiento
-#         db.commit()
-#         db.refresh(db_lote)
-#     return db_lote
+def update_lote(db: Session, idlote: int, lote: LoteBase):
+     db_lote = db.query(Lote).filter(Lote.idlote == idlote).first()
+     if db_lote:
+         db_lote.idarticulo = lote.idarticulo
+         db_lote.numero_lote = lote.numero_lote
+         db_lote.cantidad = lote.cantidad
+         db_lote.fecha_vencimiento = lote.fecha_vencimiento
+         db.commit()
+         db.refresh(db_lote)
+     return db_lote
 
-# def delete_lote(db: Session, idlote: int):
-#     db_lote = db.query(Lote).filter(Lote.idlote == idlote).first()
-#     if db_lote:
-#         db.delete(db_lote)
-#         db.commit()
-#     return db_lote
+def delete_lote(db: Session, idlote: int):
+     db_lote = db.query(Lote).filter(Lote.idlote == idlote).first()
+     if db_lote:
+         db.delete(db_lote)
+         db.commit()
+     return db_lote
 
 # CRUD para Cliente
 def get_clientes(db: Session):
@@ -226,3 +226,45 @@ def update_empleado_disponible(db: Session, idempleado: int, disponible: bool):
         db.refresh(empleado)
         return empleado
     return None
+
+#Crud de Articulo
+def get_articulo(db: Session):
+    return db.query(Articulo).all()
+
+def get_articulo_by_id(db: Session, idarticulo: int):
+    return db.query(Articulo).filter(Articulo.idarticulo == idarticulo).first()
+
+def create_articulo(db: Session, articulo: ArticuloBase):
+    new_articulo = Articulo(
+        idcategoria=articulo.idcategoria,
+        idpresentacion=articulo.idpresentacion,
+        codigo=articulo.codigo,
+        nombre=articulo.nombre,
+        descripcion=articulo.descripcion,
+        perecedero=articulo.perecedero
+    )
+    db.add(new_articulo)
+    db.commit()
+    db.refresh(new_articulo)
+    return new_articulo
+
+def update_articulo(db: Session, idarticulo: int, articulo: ArticuloBase):
+    db_articulo = db.query(Articulo).filter(Articulo.idarticulo == idarticulo).first()
+    if db_articulo:
+        db_articulo.idcategoria = articulo.idcategoria
+        db_articulo.idpresentacion = articulo.idpresentacion
+        db_articulo.codigo = articulo.codigo
+        db_articulo.nombre = articulo.nombre
+        db_articulo.descripcion = articulo.descripcion
+        db_articulo.perecedero = articulo.perecedero
+        db.commit()
+        db.refresh(db_articulo)
+    return db_articulo
+
+def delete_articulo(db: Session, idarticulo: int):
+    db_articulo = db.query(Articulo).filter(Articulo.idarticulo == idarticulo).first()
+    if db_articulo:
+        db.delete(db_articulo)
+        db.commit()
+    return db_articulo
+

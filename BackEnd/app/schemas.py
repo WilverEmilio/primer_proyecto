@@ -64,19 +64,20 @@ class Presentacion(PresentacionBase):
     class Config: 
         from_attributes = True
 
-# class LoteBase(BaseModel):
-#     idarticulo: int
-#     numero_lote: str
-#     cantidad: int
-#     fecha_vencimiento: Optional[date] = None
+class LoteBase(BaseModel):
+     idarticulo: int
+     numero_lote: str
+     cantidad: int
+     fecha_vencimiento: Optional[date] = None
+     
+     class Config: 
+        from_attributes = True
 
+class Lote(LoteBase):
+     idlote: int
 
-
-# class Lote(LoteBase):
-#     idlote: int
-
-#     class Config: 
-#         from_attributes = True
+     class Config: 
+         from_attributes = True
 
 # Esquemas de Cliente
 class ClienteBase(BaseModel):
@@ -122,6 +123,23 @@ class EmpleadoBase(BaseModel):
         
 class Empleado(EmpleadoBase):
     idempleado: int
+
+    class Config: 
+        from_attributes = True
+        
+class ArticuloBase(BaseModel):
+    idcategoria: int
+    idpresentacion: int
+    codigo: str
+    nombre: str
+    descripcion: str
+    perecedero : bool
+    
+    class Config: 
+        from_attributes = True
+        
+class Articulo(ArticuloBase):
+    idarticulo: int
 
     class Config: 
         from_attributes = True

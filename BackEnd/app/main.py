@@ -7,6 +7,7 @@ from . import crud
 from .conexion import SessionLocal, engine
 from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse
 from .schemas import Categoria,  Presentacion,   Cliente,  Proveedor, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, Empleado
+from .schemas import Articulo, Lote, ArticuloBase, LoteBase
 from .models import Base
 from passlib.context import CryptContext
 from jose import JWTError, jwt
@@ -164,35 +165,35 @@ def delete_presentacion(idpresentacion: int, db: Session = Depends(get_db)):
         return deleted_presentacion
     raise HTTPException(status_code=404, detail=f'La presentación con el id {idpresentacion} no se encuentra en la base de datos')
 
-# # Rutas para Lote
-# @app.get('/api/lotes/', response_model=List[Lote])
-# def get_lotes(db: Session = Depends(get_db)):
-#     return crud.get_lotes(db=db)
+# Rutas para Lote
+@app.get('/api/lotes/', response_model=List[Lote])
+def get_lotes(db: Session = Depends(get_db)):
+     return crud.get_lotes(db=db)
 
-# @app.get('/api/lote/{idlote}', response_model=Lote)
-# def get_lote(idlote: int, db: Session = Depends(get_db)):
-#     lote_by_id = crud.get_lote_by_id(db=db, idlote=idlote)
-#     if lote_by_id:
-#         return lote_by_id
-#     raise HTTPException(status_code=404, detail=f'El lote con el id {idlote} no se encuentra en la base de datos')
+@app.get('/api/lote/{idlote}', response_model=Lote)
+def get_lote(idlote: int, db: Session = Depends(get_db)):
+     lote_by_id = crud.get_lote_by_id(db=db, idlote=idlote)
+     if lote_by_id:
+         return lote_by_id
+     raise HTTPException(status_code=404, detail=f'El lote con el id {idlote} no se encuentra en la base de datos')
 
-# @app.post('/api/lotes/', response_model=Lote)
-# def create_lote(lote: LoteBase, db: Session = Depends(get_db)):
-#     return crud.create_lote(db=db, lote=lote)
+@app.post('/api/lotes/', response_model=Lote)
+def create_lote(lote: LoteBase, db: Session = Depends(get_db)):
+     return crud.create_lote(db=db, lote=lote)
 
-# @app.put('/api/lote/{idlote}', response_model=Lote)
-# def update_lote(idlote: int, lote: LoteBase, db: Session = Depends(get_db)):
-#     updated_lote = crud.update_lote(db=db, idlote=idlote, lote=lote)
-#     if updated_lote:
-#         return updated_lote
-#     raise HTTPException(status_code=404, detail=f'El lote con el id {idlote} no se encuentra en la base de datos')
+@app.put('/api/lote/{idlote}', response_model=Lote)
+def update_lote(idlote: int, lote: LoteBase, db: Session = Depends(get_db)):
+     updated_lote = crud.update_lote(db=db, idlote=idlote, lote=lote)
+     if updated_lote:
+         return updated_lote
+     raise HTTPException(status_code=404, detail=f'El lote con el id {idlote} no se encuentra en la base de datos')
 
-# @app.delete('/api/lote/{idlote}', response_model=Lote)
-# def delete_lote(idlote: int, db: Session = Depends(get_db)):
-#     deleted_lote = crud.delete_lote(db=db, idlote=idlote)
-#     if deleted_lote:
-#         return deleted_lote
-#     raise HTTPException(status_code=404, detail=f'El lote con el id {idlote} no se encuentra en la base de datos')
+@app.delete('/api/lote/{idlote}', response_model=Lote)
+def delete_lote(idlote: int, db: Session = Depends(get_db)):
+     deleted_lote = crud.delete_lote(db=db, idlote=idlote)
+     if deleted_lote:
+         return deleted_lote
+     raise HTTPException(status_code=404, detail=f'El lote con el id {idlote} no se encuentra en la base de datos')
 
 # Rutas para Cliente
 @app.get('/api/clientesObtener/', response_model=List[Cliente])
@@ -302,3 +303,38 @@ def delete_empleado(idempleado: int, db: Session = Depends(get_db)):
     if deleted_empleado:
         return deleted_empleado
     raise HTTPException(status_code=404, detail=f'El empleado con el id {idempleado} no se encuentra en la base de datos')
+
+#Rutas de Articulo
+@app.get('/api/articulosObtener/', response_model=List[Articulo])
+def get_articulos(db: Session = Depends(get_db)):
+    return crud.get_articulo(db=db)
+
+@app.get('/api/articulo/{idarticulo}', response_model=Articulo)
+def get_articulo(idarticulo: int, db: Session = Depends(get_db)):
+    articulo_by_id = crud.get_articulo_by_id(db=db, idarticulo=idarticulo)
+    if articulo_by_id:
+        return articulo_by_id
+    raise HTTPException(status_code=404, detail=f'El artículo con el id {idarticulo} no se encuentra en la base de datos')
+
+@app.post('/api/articulos/', response_model=Articulo)
+async def create_articulo(articulo: Articulo, db: Session = Depends(get_db)):
+    try:
+        nuevo_articulo = crud.create_articulo(db=db, articulo=articulo)
+        return nuevo_articulo
+    except ValueError as e:
+        print(e.json())
+        raise HTTPException(status_code=422, detail=str(e))
+    
+@app.put('/api/articulo/{idarticulo}', response_model=Articulo)
+def update_articulo(idarticulo: int, articulo: Articulo, db: Session = Depends(get_db)):
+    updated_articulo = crud.update_articulo(db=db, idarticulo=idarticulo, articulo=articulo)
+    if updated_articulo:
+        return updated_articulo
+    raise HTTPException(status_code=404, detail=f'El artículo con el id {idarticulo} no se encuentra en la base de datos')
+
+@app.delete('/api/articulo/{idarticulo}', response_model=Articulo)
+def delete_articulo(idarticulo: int, db: Session = Depends(get_db)):
+    deleted_articulo = crud.delete_articulo(db=db, idarticulo=idarticulo)
+    if deleted_articulo:
+        return deleted_articulo
+    raise HTTPException(status_code=404, detail=f'El artículo con el id {idarticulo} no se encuentra en la base de datos')
