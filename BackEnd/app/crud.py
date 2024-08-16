@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario, Venta
-from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioCreate, VentaCreate
-from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Articulo, Lote
+from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioCreate, VentaCreate, DetalleVentaCreate
+from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Articulo, Lote, DetalleVenta
 from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase
 from .schemas import ArticuloBase, LoteBase
 from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario
@@ -331,3 +331,33 @@ def delete_venta(db: Session, venta_id: int):
         db.delete(db_venta)
         db.commit()
     return db_venta
+
+#Crud Detalle_venta
+def create_detalle_venta(db: Session, detalle_venta: DetalleVentaCreate):
+    db_detalle_venta = DetalleVenta(**detalle_venta.dict())
+    db.add(db_detalle_venta)
+    db.commit()
+    db.refresh(db_detalle_venta)
+    return db_detalle_venta
+
+def get_detalles_venta(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(DetalleVenta).offset(skip).limit(limit).all()
+
+def get_detalle_venta(db: Session, detalle_venta_id: int):
+    return db.query(DetalleVenta).filter(DetalleVenta.iddetalle_venta == detalle_venta_id).first()
+
+def update_detalle_venta(db: Session, detalle_venta_id: int, detalle_venta_update: DetalleVentaCreate):
+    db_detalle_venta = db.query(DetalleVenta).filter(DetalleVenta.iddetalle_venta == detalle_venta_id).first()
+    if db_detalle_venta:
+        for key, value in detalle_venta_update.dict().items():
+            setattr(db_detalle_venta, key, value)
+        db.commit()
+        db.refresh(db_detalle_venta)
+    return db_detalle_venta
+
+def delete_detalle_venta(db: Session, detalle_venta_id: int):
+    db_detalle_venta = db.query(DetalleVenta).filter(DetalleVenta.iddetalle_venta == detalle_venta_id).first()
+    if db_detalle_venta:
+        db.delete(db_detalle_venta)
+        db.commit()
+    return db_detalle_venta

@@ -7,6 +7,7 @@ from . import crud
 from .conexion import SessionLocal, engine
 from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioBase, Horario
 from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioCreate, Horario, VentaCreate, Venta
+from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioCreate, Horario, VentaCreate, Venta, DetalleVentaCreate, DetalleVenta
 from .schemas import Categoria,  Presentacion,   Cliente,  Proveedor, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, Empleado
 from .schemas import Articulo, Lote, ArticuloBase, LoteBase
 from .models import Base
@@ -399,3 +400,33 @@ def delete_venta(idventa: int, db: Session = Depends(get_db)):
     if deleted_venta:
         return deleted_venta
     raise HTTPException(status_code=404, detail=f'La venta con el id {idventa} no se encuentra en la base de datos')
+
+#Rustas Detalle_venta
+@app.get('/api/detalles_venta/', response_model=list[DetalleVenta])
+def get_detalles_venta(db: Session = Depends(get_db)):
+    return crud.get_detalles_venta(db=db)
+
+@app.get('/api/detalle_venta/{iddetalle_venta}', response_model=DetalleVenta)
+def get_detalle_venta(iddetalle_venta: int, db: Session = Depends(get_db)):
+    detalle_venta = crud.get_detalle_venta(db=db, detalle_venta_id=iddetalle_venta)
+    if detalle_venta:
+        return detalle_venta
+    raise HTTPException(status_code=404, detail=f'El detalle de venta con el id {iddetalle_venta} no se encuentra en la base de datos')
+
+@app.post('/api/detalles_venta/', response_model=DetalleVenta)
+def create_detalle_venta(detalle_venta: DetalleVentaCreate, db: Session = Depends(get_db)):
+    return crud.create_detalle_venta(db=db, detalle_venta=detalle_venta)
+
+@app.put('/api/detalle_venta/{iddetalle_venta}', response_model=DetalleVenta)
+def update_detalle_venta(iddetalle_venta: int, detalle_venta: DetalleVentaCreate, db: Session = Depends(get_db)):
+    updated_detalle_venta = crud.update_detalle_venta(db=db, detalle_venta_id=iddetalle_venta, detalle_venta_update=detalle_venta)
+    if updated_detalle_venta:
+        return updated_detalle_venta
+    raise HTTPException(status_code=404, detail=f'El detalle de venta con el id {iddetalle_venta} no se encuentra en la base de datos')
+
+@app.delete('/api/detalle_venta/{iddetalle_venta}', response_model=DetalleVenta)
+def delete_detalle_venta(iddetalle_venta: int, db: Session = Depends(get_db)):
+    deleted_detalle_venta = crud.delete_detalle_venta(db=db, detalle_venta_id=iddetalle_venta)
+    if deleted_detalle_venta:
+        return deleted_detalle_venta
+    raise HTTPException(status_code=404, detail=f'El detalle de venta con el id {iddetalle_venta} no se encuentra en la base de datos')

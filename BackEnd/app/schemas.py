@@ -194,3 +194,23 @@ class Venta(VentaBase):
 
     class Config:
         from_attributes = True
+
+#Esquema Detalle_venta
+class DetalleVentaBase(BaseModel):
+    idventa: int
+    iddetalle_ingreso: int
+    cantidad: int
+    precio_venta: Decimal
+    descuento: Decimal | None = None
+
+    class Config:
+        from_attributes = True
+
+class DetalleVentaCreate(DetalleVentaBase):
+    pass
+
+class DetalleVenta(DetalleVentaBase):
+    iddetalle_venta: int
+
+    class Config:
+        from_attributes = True

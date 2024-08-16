@@ -99,3 +99,17 @@ class Venta(Base):
     
     cliente = relationship("Cliente", back_populates="ventas")
     usuario = relationship("Usuario", back_populates="ventas")
+
+#Modelo detalle_venta
+class DetalleVenta(Base):
+    __tablename__ = "detalle_venta"
+    
+    iddetalle_venta = Column(Integer, primary_key=True, index=True)
+    idventa = Column(Integer, ForeignKey('venta.idventa'))
+    iddetalle_ingreso = Column(Integer, ForeignKey('detalle_ingreso.iddetalle_ingreso'))
+    cantidad = Column(Integer, nullable=False)
+    precio_venta = Column(Decimal(10, 2), nullable=False)
+    descuento = Column(Decimal(10, 2))
+
+    venta = relationship("Venta", back_populates="detalles_venta")
+    detalle_ingreso = relationship("DetalleIngreso", back_populates="detalles_venta")
