@@ -66,7 +66,7 @@ def validate_user(username: str, password: str, db: Session = Depends(get_db)):
 def inicio():
     return RedirectResponse(url='/docs/')
 
-@app.get('/api/usuarios/', response_model=List[Buscar_Usuario])
+@app.get('/api/usuariosObtener/', response_model=List[Buscar_Usuario])
 def get_users(db: Session = Depends(get_db)):
     return crud.get_usuarios(db=db)
 

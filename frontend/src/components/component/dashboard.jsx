@@ -29,6 +29,7 @@ import CategoriaPage from '@/app/categoria/page';
 import EmpleadoPage from '@/app/empleado/page';
 import ClientePage from '@/app/cliente/page';
 import ProveedorPage from '@/app/proveedor/page';
+import UsuarioPage from '@/app/usuario/app';
 
 export function Dashboard() {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -102,7 +103,7 @@ export function Dashboard() {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleMenuClick('customers')}>
                 <Link href="#" prefetch={false}>
-                  Customers
+                  Usuarios
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -235,8 +236,7 @@ export function Dashboard() {
         )}
         {selectedSection === 'customers' && (
           <div>
-            <h2>Customers</h2>
-            {/* Contenido de "Customers" aquí */}
+            <UsuarioPage />
           </div>
         )}
         {selectedSection === 'clients' && (
