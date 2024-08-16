@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Time, Enum, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Date, Time, Enum, ForeignKey, Boolean, Decimal
 from sqlalchemy.orm import relationship
 from .conexion import Base
 
@@ -27,15 +27,17 @@ class Presentacion(Base):
     nombre = Column(String(50), nullable=False)
     descripcion = Column(String(256), nullable=False)
 
-# Modelo de Lote
-class Lote(Base):
-     __tablename__ = 'lote'
-     idlote = Column(Integer, primary_key=True, index=True)
-     idarticulo = Column(Integer, ForeignKey('articulo.idarticulo'))
-     numero_lote = Column(String(50), nullable=False)
-     cantidad = Column(Integer, nullable=False)
-     fecha_vencimiento = Column(Date, nullable=True)
+# # Modelo de Lote
+# class Lote(Base):
+#     __tablename__ = 'lote'
+#     idlote = Column(Integer, primary_key=True, index=True)
+#     idarticulo = Column(Integer, ForeignKey('articulo.idarticulo'))
+#     numero_lote = Column(String(50), nullable=False)
+#     cantidad = Column(Integer, nullable=False)
+#     fecha_vencimiento = Column(Date, nullable=True)
 
+#     # Relación con el modelo Articulo
+#     articulo = relationship("Articulo", back_populates="lotes")
 
 # Modelo de Cliente
 class Cliente(Base):
@@ -69,17 +71,6 @@ class Empleado(Base):
     telefono = Column(String(10), nullable=True)
     direccion = Column(String(70), nullable=True)
     disponible = Column(Boolean, nullable=False, default=True)
-    
-# Modelo de Articulo
-class Articulo(Base):
-    __tablename__ = 'articulo'
-    idarticulo = Column(Integer, primary_key=True, index=True)
-    idcategoria = Column(Integer, ForeignKey('categoria.idcategoria'))
-    idpresentacion = Column(Integer, ForeignKey('presentacion.idpresentacion'))
-    codigo = Column(String(50), nullable=False)
-    nombre = Column(String(100), nullable=False)
-    descripcion = Column(String(256), nullable=False)
-    perecedero = Column(Boolean, nullable=False)
 
 #Modelo Horario
 class Horario(Base):
@@ -91,3 +82,20 @@ class Horario(Base):
     hora_inicio = Column(Time, nullable=False)
     hora_fin = Column(Time, nullable=False)
     
+    usuario = relationship("Usuario", back_populates="horarios")
+
+#Modelo Venta
+class Venta(Base):
+    __tablename__ = "venta"
+    
+    idventa = Column(Integer, primary_key=True, index=True)
+    idcliente = Column(Integer, ForeignKey('cliente.idcliente'))
+    idusuario = Column(Integer, ForeignKey('usuario.idusuario'))
+    tipo_comprobante = Column(String(20))
+    serie_comprobante = Column(String(7))
+    num_comprobante = Column(String(10))
+    fecha = Column(Date, nullable=False)
+    impuesto = Column(Decimal(4, 2), nullable=False)
+    
+    cliente = relationship("Cliente", back_populates="ventas")
+    usuario = relationship("Usuario", back_populates="ventas")
