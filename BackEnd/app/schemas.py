@@ -208,3 +208,40 @@ class DetalleVenta(DetalleVentaBase):
 
     class Config:
         from_attributes = True
+
+class IngresoBase(BaseModel):
+    idproveedor: int
+    idusuario: int
+    tipo_comprobante: str
+    serie_comprobante: str
+    num_comprobante: str
+    fecha: date
+    impuesto: Decimal
+
+    class Config:
+        from_attributes = True
+        
+class Ingreso(IngresoBase):
+    idingreso: int
+
+    class Config:
+        from_attributes = True
+        
+class DetalleIngresoBase(BaseModel):
+    idingreso: int
+    idproducto: int
+    precio_compra: Decimal
+    precio_venta: Decimal
+    stock_inicial: int
+    stock_actual: int
+    fecha_produccion: date
+    fecha_vencimiento: date
+
+    class Config:
+        from_attributes = True
+        
+class DetalleIngreso(DetalleIngresoBase):
+    iddetalle_ingreso: int
+
+    class Config:
+        from_attributes = True

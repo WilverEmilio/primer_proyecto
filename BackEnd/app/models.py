@@ -117,3 +117,27 @@ class Articulo(Base):
     nombre = Column(String(100), nullable=False)
     descripcion = Column(String(256), nullable=True)
     perecedero = Column(Boolean, nullable=False, default=False)
+    
+class Ingreso(Base):
+    __tablename__ = "ingreso"
+    idingreso = Column(Integer, primary_key=True, index=True)
+    idproveedor = Column(Integer, ForeignKey('proveedor.idproveedor'))
+    idusuario = Column(Integer, ForeignKey('usuario.idusuario'))
+    tipo_comprobante = Column(String(20))
+    serie_comprobante = Column(String(7))
+    num_comprobante = Column(String(10))
+    fecha = Column(Date, nullable=False)
+    impuesto = Column(DECIMAL(4, 2), nullable=False)
+    
+class DetalleIngreso(Base):
+    __tablename__ = "detalle_ingreso"
+    iddetalle_ingreso = Column(Integer, primary_key=True, index=True)
+    idingreso = Column(Integer, ForeignKey('ingreso.idingreso'))
+    idproducto = Column(Integer, ForeignKey('articulo.idarticulo'))
+    precio_compra = Column(DECIMAL(10, 2), nullable=False)
+    precio_venta = Column(DECIMAL(10, 2), nullable=False)
+    stock_inicial = Column(Integer, nullable=False)
+    stock_actual = Column(Integer, nullable=False)
+    fecha_produccion = Column(Date, nullable=False)
+    fecha_vencimiento = Column(Date, nullable=False)
+    

@@ -6,9 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from . import crud
 from .conexion import SessionLocal, engine
 from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioBase, Horario, VentaBase
-from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse,  Horario,  Venta,  DetalleVenta, DetalleVentaBase
+from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse,  Horario,  Venta,  DetalleVenta, DetalleVentaBase, DetalleIngreso, DetalleIngresoBase
 from .schemas import Categoria,  Presentacion,   Cliente,  Proveedor, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, Empleado
-from .schemas import Articulo, Lote, ArticuloBase, LoteBase
+from .schemas import Articulo, Lote, ArticuloBase, LoteBase, Ingreso, IngresoBase
 from .models import Base
 from passlib.context import CryptContext
 from jose import JWTError, jwt
@@ -429,3 +429,65 @@ def delete_detalle_venta(iddetalle_venta: int, db: Session = Depends(get_db)):
     if deleted_detalle_venta:
         return deleted_detalle_venta
     raise HTTPException(status_code=404, detail=f'El detalle de venta con el id {iddetalle_venta} no se encuentra en la base de datos')
+
+
+#Ruta ingreso
+@app.get('/api/ingresos/', response_model=list[Ingreso])
+def get_ingresos(db: Session = Depends(get_db)):
+    return crud.get_ingresos(db=db)
+
+@app.get('/api/ingreso/{idingreso}', response_model=Ingreso)
+def get_ingreso(idingreso: int, db: Session = Depends(get_db)):
+    ingreso = crud.get_ingreso(db=db, ingreso_id=idingreso)
+    if ingreso:
+        return ingreso
+    raise HTTPException(status_code=404, detail=f'El ingreso con el id {idingreso} no se encuentra en la base de datos')
+
+@app.post('/api/ingresos/', response_model=Ingreso)
+def create_ingreso(ingreso: IngresoBase, db: Session = Depends(get_db)):
+    return crud.create_ingreso(db=db, ingreso=ingreso)
+
+@app.put('/api/ingreso/{idingreso}', response_model=Ingreso)
+def update_ingreso(idingreso: int, ingreso: IngresoBase, db: Session = Depends(get_db)):
+    updated_ingreso = crud.update_ingreso(db=db, ingreso_id=idingreso, ingreso_update=ingreso)
+    if updated_ingreso:
+        return updated_ingreso
+    raise HTTPException(status_code=404, detail=f'El ingreso con el id {idingreso} no se encuentra en la base de datos')
+
+@app.delete('/api/ingreso/{idingreso}', response_model=Ingreso)
+def delete_ingreso(idingreso: int, db: Session = Depends(get_db)):
+    deleted_ingreso = crud.delete_ingreso(db=db, ingreso_id=idingreso)
+    if deleted_ingreso:
+        return deleted_ingreso
+    raise HTTPException(status_code=404, detail=f'El ingreso con el id {idingreso} no se encuentra en la base de datos')
+
+#Rutas detalle_ingreso
+@app.get('/api/detalles_ingreso/', response_model=list[DetalleIngreso])
+def get_detalles_ingreso(db: Session = Depends(get_db)):
+    return crud.get_detalles_ingreso(db=db)
+
+@app.get('/api/detalle_ingreso/{iddetalle_ingreso}', response_model=DetalleIngreso)
+def get_detalle_ingreso(iddetalle_ingreso: int, db: Session = Depends(get_db)):
+    detalle_ingreso = crud.get_detalle_ingreso(db=db, detalle_ingreso_id=iddetalle_ingreso)
+    if detalle_ingreso:
+        return detalle_ingreso
+    raise HTTPException(status_code=404, detail=f'El detalle de ingreso con el id {iddetalle_ingreso} no se encuentra en la base de datos')
+
+@app.post('/api/detalles_ingreso/', response_model=DetalleIngreso)
+def create_detalle_ingreso(detalle_ingreso: DetalleIngresoBase, db: Session = Depends(get_db)):
+    return crud.create_detalle_ingreso(db=db, detalle_ingreso=detalle_ingreso)
+
+@app.put('/api/detalle_ingreso/{iddetalle_ingreso}', response_model=DetalleIngreso)
+def update_detalle_ingreso(iddetalle_ingreso: int, detalle_ingreso: DetalleIngresoBase, db: Session = Depends(get_db)):
+    updated_detalle_ingreso = crud.update_detalle_ingreso(db=db, detalle_ingreso_id=iddetalle_ingreso, detalle_ingreso_update=detalle_ingreso)
+    if updated_detalle_ingreso:
+        return updated_detalle_ingreso
+    raise HTTPException(status_code=404, detail=f'El detalle de ingreso con el id {iddetalle_ingreso} no se encuentra en la base de datos')
+
+@app.delete('/api/detalle_ingreso/{iddetalle_ingreso}', response_model=DetalleIngreso)
+def delete_detalle_ingreso(iddetalle_ingreso: int, db: Session = Depends(get_db)):
+    deleted_detalle_ingreso = crud.delete_detalle_ingreso(db=db, detalle_ingreso_id=iddetalle_ingreso)
+    if deleted_detalle_ingreso:
+        return deleted_detalle_ingreso
+    raise HTTPException(status_code=404, detail=f'El detalle de ingreso con el id {iddetalle_ingreso} no se encuentra en la base de datos')
+

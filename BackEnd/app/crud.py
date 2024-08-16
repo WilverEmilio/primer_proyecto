@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario, Venta
 from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, DetalleVentaBase, VentaBase
-from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Articulo, Lote, DetalleVenta
-from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase
+from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Articulo, Lote, DetalleVenta, Ingreso, DetalleIngreso
+from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, IngresoBase, DetalleIngresoBase
 from .schemas import ArticuloBase, LoteBase
 from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario
 from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioBase
@@ -361,3 +361,91 @@ def delete_detalle_venta(db: Session, detalle_venta_id: int):
         db.delete(db_detalle_venta)
         db.commit()
     return db_detalle_venta
+
+#Crud Ingreso
+def get_ingresos(db: Session):
+    return db.query(Ingreso).all()
+
+def get_ingreso_by_id(db: Session, idingreso: int):
+    return db.query(Ingreso).filter(Ingreso.idingreso == idingreso).first()
+
+def create_ingreso(db: Session, ingreso: IngresoBase):
+    new_ingreso = Ingreso(
+        idproveedor=ingreso.idproveedor,
+        idusuario=ingreso.idusuario,
+        tipo_comprobante=ingreso.tipo_comprobante,
+        serie_comprobante=ingreso.serie_comprobante,
+        num_comprobante=ingreso.num_comprobante,
+        fecha=ingreso.fecha,
+        impuesto=ingreso.impuesto
+    )
+    db.add(new_ingreso)
+    db.commit()
+    db.refresh(new_ingreso)
+    return new_ingreso
+
+def update_ingreso(db: Session, idingreso: int, ingreso: IngresoBase):
+    db_ingreso = db.query(Ingreso).filter(Ingreso.idingreso == idingreso).first()
+    if db_ingreso:
+        db_ingreso.idproveedor = ingreso.idproveedor
+        db_ingreso.idusuario = ingreso.idusuario
+        db_ingreso.tipo_comprobante = ingreso.tipo_comprobante
+        db_ingreso.serie_comprobante = ingreso.serie_comprobante
+        db_ingreso.num_comprobante = ingreso.num_comprobante
+        db_ingreso.fecha = ingreso.fecha
+        db_ingreso.impuesto = ingreso.impuesto
+        db.commit()
+        db.refresh(db_ingreso)
+    return db_ingreso
+
+def delete_ingreso(db: Session, idingreso: int):
+    db_ingreso = db.query(Ingreso).filter(Ingreso.idingreso == idingreso).first()
+    if db_ingreso:
+        db.delete(db_ingreso)
+        db.commit()
+    return db_ingreso
+
+#Crud Detalle_ingreso
+def get_detalles_ingreso(db: Session):
+    return db.query(DetalleIngreso).all()
+
+def get_detalle_ingreso_by_id(db: Session, iddetalle_ingreso: int):
+    return db.query(DetalleIngreso).filter(DetalleIngreso.iddetalle_ingreso == iddetalle_ingreso).first()
+
+def create_detalle_ingreso(db: Session, detalle_ingreso: DetalleIngresoBase):
+    new_detalle_ingreso = DetalleIngreso(
+        idingreso=detalle_ingreso.idingreso,
+        idproducto=detalle_ingreso.idproducto,
+        precio_compra=detalle_ingreso.precio_compra,
+        precio_venta=detalle_ingreso.precio_venta,
+        stock_inicial=detalle_ingreso.stock_inicial,
+        stock_actual=detalle_ingreso.stock_actual,
+        fecha_produccion=detalle_ingreso.fecha_produccion,
+        fecha_vencimiento=detalle_ingreso.fecha_vencimiento
+    )
+    db.add(new_detalle_ingreso)
+    db.commit()
+    db.refresh(new_detalle_ingreso)
+    return new_detalle_ingreso
+
+def update_detalle_ingreso(db: Session, iddetalle_ingreso: int, detalle_ingreso: DetalleIngresoBase):
+    db_detalle_ingreso = db.query(DetalleIngreso).filter(DetalleIngreso.iddetalle_ingreso == iddetalle_ingreso).first()
+    if db_detalle_ingreso:
+        db_detalle_ingreso.idingreso = detalle_ingreso.idingreso
+        db_detalle_ingreso.idproducto = detalle_ingreso.idproducto
+        db_detalle_ingreso.precio_compra = detalle_ingreso.precio_compra
+        db_detalle_ingreso.precio_venta = detalle_ingreso.precio_venta
+        db_detalle_ingreso.stock_inicial = detalle_ingreso.stock_inicial
+        db_detalle_ingreso.stock_actual = detalle_ingreso.stock_actual
+        db_detalle_ingreso.fecha_produccion = detalle_ingreso.fecha_produccion
+        db_detalle_ingreso.fecha_vencimiento = detalle_ingreso.fecha_vencimiento
+        db.commit()
+        db.refresh(db_detalle_ingreso)
+    return db_detalle_ingreso
+
+def delete_detalle_ingreso(db: Session, iddetalle_ingreso: int):
+    db_detalle_ingreso = db.query(DetalleIngreso).filter(DetalleIngreso.iddetalle_ingreso == iddetalle_ingreso).first()
+    if db_detalle_ingreso:
+        db.delete(db_detalle_ingreso)
+        db.commit()
+    return db_detalle_ingreso
