@@ -28,6 +28,7 @@ import PresentacionPage from '@/app/presentacion/page';
 import CategoriaPage from '@/app/categoria/page';
 import EmpleadoPage from '@/app/empleado/page';
 import ClientePage from '@/app/cliente/page';
+import ProveedorPage from '@/app/proveedor/page';
 
 export function Dashboard() {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -83,7 +84,7 @@ export function Dashboard() {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleMenuClick('supplier-list')}>
                 <Link href="#" prefetch={false}>
-                  Supplier List
+                  Proveedor
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -224,8 +225,7 @@ export function Dashboard() {
         )}
         {selectedSection === 'supplier-list' && (
           <div>
-            <h2>Supplier List</h2>
-            {/* Contenido de "Supplier List" aquí */}
+            <ProveedorPage />
           </div>
         )}
         {selectedSection === 'employees' && (

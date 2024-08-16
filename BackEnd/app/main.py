@@ -225,7 +225,7 @@ def delete_cliente(idcliente: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail=f'El cliente con el id {idcliente} no se encuentra en la base de datos')
 
 # Rutas para Proveedor
-@app.get('/api/proveedores/', response_model=List[Proveedor])
+@app.get('/api/proveedoresObtener/', response_model=List[Proveedor])
 def get_proveedores(db: Session = Depends(get_db)):
     return crud.get_proveedores(db=db)
 
@@ -240,14 +240,14 @@ def get_proveedor(idproveedor: int, db: Session = Depends(get_db)):
 def create_proveedor(proveedor: ProveedorBase, db: Session = Depends(get_db)):
     return crud.create_proveedor(db=db, proveedor=proveedor)
 
-@app.put('/api/proveedor/{idproveedor}', response_model=Proveedor)
+@app.put('/api/proveedoresActualizar/{idproveedor}', response_model=Proveedor)
 def update_proveedor(idproveedor: int, proveedor: ProveedorBase, db: Session = Depends(get_db)):
     updated_proveedor = crud.update_proveedor(db=db, idproveedor=idproveedor, proveedor=proveedor)
     if updated_proveedor:
         return updated_proveedor
     raise HTTPException(status_code=404, detail=f'El proveedor con el id {idproveedor} no se encuentra en la base de datos')
 
-@app.delete('/api/proveedor/{idproveedor}', response_model=Proveedor)
+@app.delete('/api/proveedorDelete/{idproveedor}', response_model=Proveedor)
 def delete_proveedor(idproveedor: int, db: Session = Depends(get_db)):
     deleted_proveedor = crud.delete_proveedor(db=db, idproveedor=idproveedor)
     if deleted_proveedor:
