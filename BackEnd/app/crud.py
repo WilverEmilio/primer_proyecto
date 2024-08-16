@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario
-from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioCreate
+from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario, Venta
+from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioCreate, VentaCreate
 
 # CRUD para Usuario
 def get_usuarios(db: Session):
@@ -256,3 +256,33 @@ def delete_horario(db: Session, horario_id: int):
         db.delete(db_horario)
         db.commit()
     return db_horario
+
+#Crud venta
+def create_venta(db: Session, venta: VentaCreate):
+    db_venta = Venta(**venta.dict())
+    db.add(db_venta)
+    db.commit()
+    db.refresh(db_venta)
+    return db_venta
+
+def get_ventas(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(Venta).offset(skip).limit(limit).all()
+
+def get_venta(db: Session, venta_id: int):
+    return db.query(Venta).filter(Venta.idventa == venta_id).first()
+
+def update_venta(db: Session, venta_id: int, venta_update: VentaCreate):
+    db_venta = db.query(Venta).filter(Venta.idventa == venta_id).first()
+    if db_venta:
+        for key, value in venta_update.dict().items():
+            setattr(db_venta, key, value)
+        db.commit()
+        db.refresh(db_venta)
+    return db_venta
+
+def delete_venta(db: Session, venta_id: int):
+    db_venta = db.query(Venta).filter(Venta.idventa == venta_id).first()
+    if db_venta:
+        db.delete(db_venta)
+        db.commit()
+    return db_venta

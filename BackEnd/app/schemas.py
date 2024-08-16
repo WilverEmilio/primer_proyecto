@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date, time
 import enum
+from decimal import Decimal
 
 # Esquemas de Usuario
 class Datos_Usuarios(BaseModel): 
@@ -146,8 +147,32 @@ class HorarioBase(BaseModel):
     class Config:
         from_attributes = True
 
+class HorarioCreate(HorarioBase):
+    pass
+
 class Horario(HorarioBase):
     idhorario: int
+
+    class Config:
+        from_attributes = True
+#Esquema Venta
+class VentaBase(BaseModel):
+    idcliente: int
+    idusuario: int
+    tipo_comprobante: str
+    serie_comprobante: str
+    num_comprobante: str
+    fecha: date
+    impuesto: Decimal
+
+    class Config:
+        from_attributes = True
+
+class VentaCreate(VentaBase):
+    pass
+
+class Venta(VentaBase):
+    idventa: int
 
     class Config:
         from_attributes = True

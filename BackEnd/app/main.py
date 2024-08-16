@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from . import crud
 from .conexion import SessionLocal, engine
-from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioCreate, Horario
+from .schemas import Datos_Usuarios, Buscar_Usuario, Login, LoginResponse, HorarioCreate, Horario, VentaCreate, Venta
 from .schemas import Categoria,  Presentacion,   Cliente,  Proveedor, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, Empleado
 from .models import Base
 from passlib.context import CryptContext
@@ -332,3 +332,33 @@ def delete_horario(idhorario: int, db: Session = Depends(get_db)):
     if deleted_horario:
         return deleted_horario
     raise HTTPException(status_code=404, detail=f'El horario con el id {idhorario} no se encuentra en la base de datos')
+
+#Rutas venta
+@app.get('/api/ventas/', response_model=list[Venta])
+def get_ventas(db: Session = Depends(get_db)):
+    return crud.get_ventas(db=db)
+
+@app.get('/api/venta/{idventa}', response_model=Venta)
+def get_venta(idventa: int, db: Session = Depends(get_db)):
+    venta = crud.get_venta(db=db, venta_id=idventa)
+    if venta:
+        return venta
+    raise HTTPException(status_code=404, detail=f'La venta con el id {idventa} no se encuentra en la base de datos')
+
+@app.post('/api/ventas/', response_model=Venta)
+def create_venta(venta: VentaCreate, db: Session = Depends(get_db)):
+    return crud.create_venta(db=db, venta=venta)
+
+@app.put('/api/venta/{idventa}', response_model=Venta)
+def update_venta(idventa: int, venta: VentaCreate, db: Session = Depends(get_db)):
+    updated_venta = crud.update_venta(db=db, venta_id=idventa, venta_update=venta)
+    if updated_venta:
+        return updated_venta
+    raise HTTPException(status_code=404, detail=f'La venta con el id {idventa} no se encuentra en la base de datos')
+
+@app.delete('/api/venta/{idventa}', response_model=Venta)
+def delete_venta(idventa: int, db: Session = Depends(get_db)):
+    deleted_venta = crud.delete_venta(db=db, venta_id=idventa)
+    if deleted_venta:
+        return deleted_venta
+    raise HTTPException(status_code=404, detail=f'La venta con el id {idventa} no se encuentra en la base de datos')

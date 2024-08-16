@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Time, Enum, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Date, Time, Enum, ForeignKey, Boolean, Decimal
 from sqlalchemy.orm import relationship
 from .conexion import Base
 
@@ -83,3 +83,19 @@ class Horario(Base):
     hora_fin = Column(Time, nullable=False)
     
     usuario = relationship("Usuario", back_populates="horarios")
+
+#Modelo Venta
+class Venta(Base):
+    __tablename__ = "venta"
+    
+    idventa = Column(Integer, primary_key=True, index=True)
+    idcliente = Column(Integer, ForeignKey('cliente.idcliente'))
+    idusuario = Column(Integer, ForeignKey('usuario.idusuario'))
+    tipo_comprobante = Column(String(20))
+    serie_comprobante = Column(String(7))
+    num_comprobante = Column(String(10))
+    fecha = Column(Date, nullable=False)
+    impuesto = Column(Decimal(4, 2), nullable=False)
+    
+    cliente = relationship("Cliente", back_populates="ventas")
+    usuario = relationship("Usuario", back_populates="ventas")
