@@ -3,6 +3,9 @@ from sqlalchemy.orm import Session
 from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Articulo, Lote
 from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase
 from .schemas import ArticuloBase, LoteBase
+from .models import Usuario, Categoria, Presentacion,  Cliente, Proveedor, Empleado, Horario
+from .schemas import Datos_Usuarios, CategoriaBase, PresentacionBase,  ClienteBase, ProveedorBase, EmpleadoBase, HorarioCreate
+
 # CRUD para Usuario
 def get_usuarios(db: Session):
     return db.query(Usuario).all()
@@ -268,3 +271,32 @@ def delete_articulo(db: Session, idarticulo: int):
         db.commit()
     return db_articulo
 
+#Crud para Horarios
+def create_horario(db: Session, horario: HorarioCreate):
+    db_horario = Horario(**horario.dict())
+    db.add(db_horario)
+    db.commit()
+    db.refresh(db_horario)
+    return db_horario
+
+def get_horarios(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(Horario).offset(skip).limit(limit).all()
+
+def get_horario(db: Session, horario_id: int):
+    return db.query(Horario).filter(Horario.idhorario == horario_id).first()
+
+def update_horario(db: Session, horario_id: int, horario_update: HorarioCreate):
+    db_horario = db.query(Horario).filter(Horario.idhorario == horario_id).first()
+    if db_horario:
+        for key, value in horario_update.dict().items():
+            setattr(db_horario, key, value)
+        db.commit()
+        db.refresh(db_horario)
+    return db_horario
+
+def delete_horario(db: Session, horario_id: int):
+    db_horario = db.query(Horario).filter(Horario.idhorario == horario_id).first()
+    if db_horario:
+        db.delete(db_horario)
+        db.commit()
+    return db_horario

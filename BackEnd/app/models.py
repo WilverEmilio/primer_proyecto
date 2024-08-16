@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Date, Time, Enum, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from .conexion import Base
 
@@ -82,3 +82,15 @@ class Articulo(Base):
     nombre = Column(String(100), nullable=False)
     descripcion = Column(String(256), nullable=False)
     perecedero = Column(Boolean, nullable=False)
+
+#Modelo Horario
+class Horario(Base):
+    __tablename__ = "horario"
+    
+    idhorario = Column(Integer, primary_key=True, index=True)
+    idusuario = Column(Integer, ForeignKey('usuario.idusuario'))
+    dia = Column(Enum('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'), nullable=False)
+    hora_inicio = Column(Time, nullable=False)
+    hora_fin = Column(Time, nullable=False)
+    
+    usuario = relationship("Usuario", back_populates="horarios")
